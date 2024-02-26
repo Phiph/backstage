@@ -185,7 +185,7 @@ async function getProjectConfig(targetPath, extraConfig) {
           },
         },
       ],
-      '\\.(bmp|gif|jpg|jpeg|png|frag|xml|svg|eot|woff|woff2|ttf)$':
+      '\\.(bmp|gif|jpg|jpeg|png|ico|frag|xml|svg|eot|woff|woff2|ttf)$':
         require.resolve('./jestFileTransform.js'),
       '\\.(yaml)$': require.resolve('./jestYamlTransform'),
     },
@@ -219,7 +219,7 @@ async function getProjectConfig(targetPath, extraConfig) {
   // If no explicit id was configured, generated one based on the configuration.
   if (!config.id) {
     const configHash = crypto
-      .createHash('md5')
+      .createHash('sha256')
       .update(version)
       .update(Buffer.alloc(1))
       .update(JSON.stringify(config.transform))

@@ -46,6 +46,7 @@ import {
 import { AbortController } from '@aws-sdk/abort-controller';
 import { ReadUrlResponseFactory } from './ReadUrlResponseFactory';
 import { Readable } from 'stream';
+import { relative } from 'path/posix';
 
 export const DEFAULT_REGION = 'us-east-1';
 
@@ -69,9 +70,9 @@ export function parseUrl(
   const host = parsedUrl.host;
 
   // Treat Amazon hosted separately because it has special region logic
-  if (config.host === 'amazonaws.com') {
+  if (config.host === 'amazonaws.com' || config.host === 'amazonaws.com.cn') {
     const match = host.match(
-      /^(?:([a-z0-9.-]+)\.)?s3(?:[.-]([a-z0-9-]+))?\.amazonaws\.com$/,
+      /^(?:([a-z0-9.-]+)\.)?s3(?:[.-]([a-z0-9-]+))?\.amazonaws\.com(\.cn)?$/,
     );
     if (!match) {
       throw new Error(`Invalid AWS S3 URL ${url}`);
@@ -345,7 +346,7 @@ export class AwsS3UrlReader implements UrlReader {
 
         responses.push({
           data: s3ObjectData,
-          path: String(allObjects[i]),
+          path: relative(path, String(allObjects[i])),
           lastModifiedAt: response?.LastModified ?? undefined,
         });
       }

@@ -38,7 +38,7 @@ import {
 import { RESOURCE_TYPE_CATALOG_ENTITY } from '@backstage/plugin-catalog-common/alpha';
 import { CatalogProcessingOrchestrator } from '../processing/types';
 import { z } from 'zod';
-import { encodeCursor } from './util';
+import { decodeCursor, encodeCursor } from './util';
 import { wrapInOpenApiTestServer } from '@backstage/backend-openapi-utils';
 import { Server } from 'http';
 
@@ -63,6 +63,7 @@ describe('createRouter readonly disabled', () => {
       createLocation: jest.fn(),
       listLocations: jest.fn(),
       deleteLocation: jest.fn(),
+      getLocationByEntity: jest.fn(),
     };
     refreshService = { refresh: jest.fn() };
     orchestrator = { process: jest.fn() };
@@ -198,6 +199,45 @@ describe('createRouter readonly disabled', () => {
       });
     });
 
+    it('parses encoded params request', async () => {
+      entitiesCatalog.queryEntities.mockResolvedValueOnce({
+        items: [],
+        pageInfo: {},
+        totalItems: 0,
+      });
+      const response = await request(app).get(
+        `/entities/by-query?filter=${encodeURIComponent(
+          'a=1,a=2,b=3',
+        )}&filter=c=4&orderField=${encodeURIComponent(
+          'metadata.name,asc',
+        )}&orderField=metadata.uid,desc`,
+      );
+
+      expect(response.status).toEqual(200);
+      expect(entitiesCatalog.queryEntities).toHaveBeenCalledTimes(1);
+      expect(entitiesCatalog.queryEntities).toHaveBeenCalledWith({
+        filter: {
+          anyOf: [
+            {
+              allOf: [
+                { key: 'a', values: ['1', '2'] },
+                { key: 'b', values: ['3'] },
+              ],
+            },
+            { allOf: [{ key: 'c', values: ['4'] }] },
+          ],
+        },
+        orderFields: [
+          { field: 'metadata.name', order: 'asc' },
+          { field: 'metadata.uid', order: 'desc' },
+        ],
+        fullTextFilter: {
+          fields: undefined,
+          term: '',
+        },
+      });
+    });
+
     it('parses cursor request', async () => {
       const items: Entity[] = [
         { apiVersion: 'a', kind: 'b', metadata: { name: 'n' } },
@@ -223,6 +263,47 @@ describe('createRouter readonly disabled', () => {
         items,
         totalItems: 100,
         pageInfo: { nextCursor: expect.any(String) },
+      });
+    });
+
+    it('parses cursor request with fullTextFilter', async () => {
+      const items: Entity[] = [
+        { apiVersion: 'a', kind: 'b', metadata: { name: 'n' } },
+      ];
+
+      entitiesCatalog.queryEntities.mockResolvedValueOnce({
+        items,
+        totalItems: 100,
+        pageInfo: {
+          nextCursor: mockCursor({ fullTextFilter: { term: 'mySearch' } }),
+        },
+      });
+
+      const cursor = mockCursor({
+        totalItems: 100,
+        isPrevious: false,
+        fullTextFilter: { term: 'mySearch' },
+      });
+
+      const response = await request(app).get(
+        `/entities/by-query?cursor=${encodeCursor(cursor)}`,
+      );
+      expect(entitiesCatalog.queryEntities).toHaveBeenCalledTimes(1);
+      expect(entitiesCatalog.queryEntities).toHaveBeenCalledWith({
+        cursor,
+      });
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual({
+        items,
+        totalItems: 100,
+        pageInfo: { nextCursor: expect.any(String) },
+      });
+      const decodedCursor = decodeCursor(response.body.pageInfo.nextCursor);
+      expect(decodedCursor).toMatchObject({
+        isPrevious: false,
+        fullTextFilter: {
+          term: 'mySearch',
+        },
       });
     });
 
@@ -582,6 +663,36 @@ describe('createRouter readonly disabled', () => {
     });
   });
 
+  describe('GET /locations/by-entity/:kind/:namespace/:name', () => {
+    it('happy path: gets location by entity ref', async () => {
+      const location: Location = {
+        id: 'foo',
+        type: 'url',
+        target: 'example.com',
+      };
+      locationService.getLocationByEntity.mockResolvedValueOnce(location);
+
+      const response = await request(app)
+        .get('/locations/by-entity/c/ns/n')
+        .set('authorization', 'Bearer someauthtoken');
+
+      expect(locationService.getLocationByEntity).toHaveBeenCalledTimes(1);
+      expect(locationService.getLocationByEntity).toHaveBeenCalledWith(
+        { kind: 'c', namespace: 'ns', name: 'n' },
+        {
+          authorizationToken: 'someauthtoken',
+        },
+      );
+
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual({
+        id: 'foo',
+        target: 'example.com',
+        type: 'url',
+      });
+    });
+  });
+
   describe('POST /validate-entity', () => {
     describe('valid entity', () => {
       it('returns 200', async () => {
@@ -714,6 +825,7 @@ describe('createRouter readonly enabled', () => {
       createLocation: jest.fn(),
       listLocations: jest.fn(),
       deleteLocation: jest.fn(),
+      getLocationByEntity: jest.fn(),
     };
     const router = await createRouter({
       entitiesCatalog,
@@ -872,6 +984,36 @@ describe('createRouter readonly enabled', () => {
       expect(response.status).toEqual(403);
     });
   });
+
+  describe('GET /locations/by-entity/:kind/:namespace/:name', () => {
+    it('happy path: gets location by entity ref', async () => {
+      const location: Location = {
+        id: 'foo',
+        type: 'url',
+        target: 'example.com',
+      };
+      locationService.getLocationByEntity.mockResolvedValueOnce(location);
+
+      const response = await request(app)
+        .get('/locations/by-entity/c/ns/n')
+        .set('authorization', 'Bearer someauthtoken');
+
+      expect(locationService.getLocationByEntity).toHaveBeenCalledTimes(1);
+      expect(locationService.getLocationByEntity).toHaveBeenCalledWith(
+        { kind: 'c', namespace: 'ns', name: 'n' },
+        {
+          authorizationToken: 'someauthtoken',
+        },
+      );
+
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual({
+        id: 'foo',
+        target: 'example.com',
+        type: 'url',
+      });
+    });
+  });
 });
 
 describe('NextRouter permissioning', () => {
@@ -905,6 +1047,7 @@ describe('NextRouter permissioning', () => {
       createLocation: jest.fn(),
       listLocations: jest.fn(),
       deleteLocation: jest.fn(),
+      getLocationByEntity: jest.fn(),
     };
     refreshService = { refresh: jest.fn() };
     const router = await createRouter({

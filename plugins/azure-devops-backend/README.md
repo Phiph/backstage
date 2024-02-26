@@ -8,7 +8,7 @@ The following sections will help you get the Azure DevOps Backend plugin setup a
 
 ### Configuration
 
-The Azure DevOps plugin requires the following YAML to be added to your app-config.yaml:
+The Azure DevOps plugin requires the following YAML to be added to your `app-config.yaml`:
 
 ```yaml
 azureDevOps:
@@ -23,6 +23,12 @@ Configuration Details:
 - `AZURE_TOKEN` environment variable must be set to a [Personal Access Token](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=preview-page) with read access to both Code and Build
 - `organization` is your Azure DevOps Services (cloud) Organization name or for Azure DevOps Server (on-premise) this will be your Collection name
 
+#### Multi Organization & Service Principals
+
+To support cases where you have multiple Azure DevOps organizations and/or you want to use a Service Principal you will want to make sure to configure them in the `integrations.azure` section of your `app-config.yaml` as detailed in the [Azure DevOps Locations](https://backstage.io/docs/integrations/azure/locations) documentation.
+
+**Note:** You will still need to define the [configuration above](#configuration).
+
 ### Up and Running
 
 Here's how to get the backend up and running:
@@ -31,7 +37,7 @@ Here's how to get the backend up and running:
 
    ```sh
    # From your Backstage root directory
-   yarn add --cwd packages/backend @backstage/plugin-azure-devops-backend
+   yarn --cwd packages/backend add @backstage/plugin-azure-devops-backend
    ```
 
 2. Then we will create a new file named `packages/backend/src/plugins/azure-devops.ts`, and add the
@@ -78,15 +84,70 @@ In your `packages/backend/src/index.ts` make the following changes:
 
 ```diff
   import { createBackend } from '@backstage/backend-defaults';
-+ import { azureDevOpsPlugin } from '@backstage/plugin-azure-devops-backend';
 
   const backend = createBackend();
 
   // ... other feature additions
 
-+ backend.add(azureDevOpsPlugin());
++ backend.add(import('@backstage/plugin-azure-devops-backend'));
 
   backend.start();
+```
+
+## Processor
+
+The Azure DevOps backend plugin includes the `AzureDevOpsAnnotatorProcessor` which will automatically add the needed annotations for you. Here's how to install it:
+
+```diff
+  import { CatalogBuilder } from '@backstage/plugin-catalog-backend';
+  import { ScaffolderEntitiesProcessor } from '@backstage/plugin-catalog-backend-module-scaffolder-entity-model';
+  import { Router } from 'express';
+  import { PluginEnvironment } from '../types';
++ import { AzureDevOpsAnnotatorProcessor } from '@backstage/plugin-azure-devops-backend';
+
+  export default async function createPlugin(
+    env: PluginEnvironment,
+  ): Promise<Router> {
+    const builder = await CatalogBuilder.create(env);
+    builder.addProcessor(new ScaffolderEntitiesProcessor());
++   builder.addProcessor(AzureDevOpsAnnotatorProcessor.fromConfig(env.config));
+    const { processingEngine, router } = await builder.build();
+    await processingEngine.start();
+    return router;
+  }
+```
+
+To use this with the New Backend System you'll want to create a [backend module extension for the Catalog](https://backstage.io/docs/backend-system/building-backends/migrating#other-catalog-extensions) if you haven't already. Here's a basic example of this assuming you are only adding the `AzureDevOpsAnnotatorProcessor`, this would go in your `packages/backend/index.ts`:
+
+```diff
+   import { createBackend } from '@backstage/backend-defaults';
++  import { catalogProcessingExtensionPoint } from '@backstage/plugin-catalog-node/alpha';
++  import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
++  import { AzureDevOpsAnnotatorProcessor } from '@backstage/plugin-azure-devops-backend';
+
++  const catalogModuleCustomExtensions = createBackendModule({
++    pluginId: 'catalog', // name of the plugin that the module is targeting
++    moduleId: 'custom-extensions',
++    register(env) {
++      env.registerInit({
++        deps: {
++          catalog: catalogProcessingExtensionPoint,
++          config: coreServices.rootConfig,
++        },
++        async init({ catalog, config }) {
++          catalog.addProcessor(AzureDevOpsAnnotatorProcessor.fromConfig(config));
++        },
++      });
++    },
++  });
+
+   const backend = createBackend();
+
+   // ... other feature additions
+
++  backend.add(catalogModuleCustomExtensions());
+
+   backend.start();
 ```
 
 ## Links

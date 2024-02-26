@@ -15,7 +15,7 @@
  */
 import { IconComponent, useApp } from '@backstage/core-plugin-api';
 import { Button } from '@material-ui/core';
-import WebIcon from '@material-ui/icons/Web';
+import DescriptionIcon from '@material-ui/icons/Description';
 import React from 'react';
 import { ScaffolderTaskOutput } from '../../../api';
 
@@ -33,7 +33,7 @@ export const TextOutputs = (props: {
   const app = useApp();
 
   const iconResolver = (key?: string): IconComponent =>
-    app.getSystemIcon(key!) ?? WebIcon;
+    app.getSystemIcon(key!) ?? DescriptionIcon;
 
   return (
     <>
@@ -47,7 +47,11 @@ export const TextOutputs = (props: {
               startIcon={<Icon />}
               component="div"
               color="primary"
-              onClick={() => setIndex?.(index !== i ? i : undefined)}
+              onClick={() => {
+                if (index !== i) {
+                  setIndex?.(i);
+                }
+              }}
               variant={index === i ? 'outlined' : undefined}
             >
               {title}

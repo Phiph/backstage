@@ -41,8 +41,10 @@ standalone mode. You can do a first-light test of your service:
 
 ```sh
 cd plugins/carmen-backend
-yarn start
+LEGACY_BACKEND_START=true yarn start
 ```
+
+> Note: `LEGACY_BACKEND_START=true` is needed while we transition fully to the [New Backend System](../backend-system/index.md). The templates have not been migrated yet; you can track this in [issue 21288](https://github.com/backstage/backstage/issues/21288)
 
 This will think for a bit, and then say `Listening on :7007`. In a different
 terminal window, now run
@@ -67,7 +69,7 @@ to your backend.
 
 ```bash
 # From your Backstage root directory
-yarn add --cwd packages/backend @internal/plugin-carmen-backend@^0.1.0 # Change this to match the plugin's package.json
+yarn --cwd packages/backend add @internal/plugin-carmen-backend@^0.1.0 # Change this to match the plugin's package.json
 ```
 
 Create a new file named `packages/backend/src/plugins/carmen.ts`, and add the

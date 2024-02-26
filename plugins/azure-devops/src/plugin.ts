@@ -15,11 +15,6 @@
  */
 
 import {
-  AZURE_DEVOPS_BUILD_DEFINITION_ANNOTATION,
-  AZURE_DEVOPS_PROJECT_ANNOTATION,
-  AZURE_DEVOPS_REPO_ANNOTATION,
-} from './constants';
-import {
   azurePipelinesEntityContentRouteRef,
   azurePullRequestDashboardRouteRef,
   azureGitTagsEntityContentRouteRef,
@@ -31,12 +26,17 @@ import {
   createRoutableExtension,
   createComponentExtension,
   discoveryApiRef,
-  identityApiRef,
+  fetchApiRef,
 } from '@backstage/core-plugin-api';
 
 import { AzureDevOpsClient } from './api/AzureDevOpsClient';
 import { Entity } from '@backstage/catalog-model';
 import { azureDevOpsApiRef } from './api/AzureDevOpsApi';
+import {
+  AZURE_DEVOPS_REPO_ANNOTATION,
+  AZURE_DEVOPS_PROJECT_ANNOTATION,
+  AZURE_DEVOPS_BUILD_DEFINITION_ANNOTATION,
+} from '@backstage/plugin-azure-devops-common';
 
 /** @public */
 export const isAzureDevOpsAvailable = (entity: Entity) =>
@@ -56,9 +56,12 @@ export const azureDevOpsPlugin = createPlugin({
   apis: [
     createApiFactory({
       api: azureDevOpsApiRef,
-      deps: { discoveryApi: discoveryApiRef, identityApi: identityApiRef },
-      factory: ({ discoveryApi, identityApi }) =>
-        new AzureDevOpsClient({ discoveryApi, identityApi }),
+      deps: {
+        discoveryApi: discoveryApiRef,
+        fetchApi: fetchApiRef,
+      },
+      factory: ({ discoveryApi, fetchApi }) =>
+        new AzureDevOpsClient({ discoveryApi, fetchApi }),
     }),
   ],
 });

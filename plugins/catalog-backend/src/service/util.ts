@@ -20,11 +20,11 @@ import lodash from 'lodash';
 import { z } from 'zod';
 import {
   Cursor,
-  EntityFilter,
   QueryEntitiesCursorRequest,
   QueryEntitiesInitialRequest,
   QueryEntitiesRequest,
 } from '../catalog/types';
+import { EntityFilter } from '@backstage/plugin-catalog-node';
 
 export async function requireRequestBody(req: Request): Promise<unknown> {
   const contentType = req.header('content-type');
@@ -106,6 +106,12 @@ export const cursorParser: z.ZodSchema<Cursor> = z.object({
   orderFields: z.array(
     z.object({ field: z.string(), order: z.enum(['asc', 'desc']) }),
   ),
+  fullTextFilter: z
+    .object({
+      term: z.string(),
+      fields: z.array(z.string()).optional(),
+    })
+    .optional(),
   orderFieldValues: z.array(z.string().or(z.null())),
   filter: entityFilterParser.optional(),
   isPrevious: z.boolean(),

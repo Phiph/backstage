@@ -65,8 +65,6 @@ indexBuilder.addCollator({
 
 ## New Backend System
 
-> DISCLAIMER: The new backend system is in alpha, and so are the search backend module support for the new backend system. We don't recommend you to migrate your backend installations to the new system yet. But if you want to experiment, you can find getting started guides below.
-
 This package exports a module that extends the search backend to also indexing the questions exposed by the [`Stack Overflow` API](https://api.stackexchange.com/docs/questions).
 
 ### Installation
@@ -75,7 +73,7 @@ Add the module package as a dependency:
 
 ```bash
 # From your Backstage root directory
-yarn add --cwd packages/backend @backstage/plugin-search-backend-module-stack-overflow-collator
+yarn --cwd packages/backend add @backstage/plugin-search-backend-module-stack-overflow-collator
 ```
 
 Add the collator to your backend instance, along with the search plugin itself:

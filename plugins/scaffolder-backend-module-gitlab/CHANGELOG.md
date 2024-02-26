@@ -1,5 +1,187 @@
 # @backstage/plugin-scaffolder-backend-module-gitlab
 
+## 0.2.13
+
+### Patch Changes
+
+- e9a5228: Exporting a default module for the new Backend System
+- 9aac2b0: Use `--cwd` as the first `yarn` argument
+- 1cd2740: Use the Gitbeaker library for `gitlab:projectAccessToken:create` action, enabling the `expiresAt` option
+- Updated dependencies
+  - @backstage/backend-common@0.21.0
+  - @backstage/backend-plugin-api@0.6.10
+  - @backstage/integration@1.9.0
+  - @backstage/plugin-scaffolder-node@0.3.0
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+
+## 0.2.13-next.3
+
+### Patch Changes
+
+- 1cd2740: Use the Gitbeaker library for `gitlab:projectAccessToken:create` action, enabling the `expiresAt` option
+- Updated dependencies
+  - @backstage/backend-common@0.21.0-next.3
+  - @backstage/integration@1.9.0-next.1
+  - @backstage/plugin-scaffolder-node@0.3.0-next.3
+  - @backstage/backend-plugin-api@0.6.10-next.3
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+
+## 0.2.13-next.2
+
+### Patch Changes
+
+- 9aac2b0: Use `--cwd` as the first `yarn` argument
+- Updated dependencies
+  - @backstage/backend-common@0.21.0-next.2
+  - @backstage/backend-plugin-api@0.6.10-next.2
+  - @backstage/plugin-scaffolder-node@0.3.0-next.2
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/integration@1.9.0-next.0
+
+## 0.2.13-next.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-plugin-api@0.6.10-next.1
+  - @backstage/backend-common@0.21.0-next.1
+  - @backstage/integration@1.9.0-next.0
+  - @backstage/plugin-scaffolder-node@0.3.0-next.1
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+
+## 0.2.13-next.0
+
+### Patch Changes
+
+- e9a5228: Exporting a default module for the new Backend System
+- Updated dependencies
+  - @backstage/backend-common@0.21.0-next.0
+  - @backstage/plugin-scaffolder-node@0.3.0-next.0
+  - @backstage/backend-plugin-api@0.6.10-next.0
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/integration@1.8.0
+
+## 0.2.12
+
+### Patch Changes
+
+- 604c9dd: Add Scaffolder custom action that creates GitLab issues called `gitlab:issues:create`
+- 7c522c5: Add `gitlab:repo:push` scaffolder action to push files to arbitrary branch without creating a Merge Request
+- Updated dependencies
+  - @backstage/backend-common@0.20.1
+  - @backstage/plugin-scaffolder-node@0.2.10
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/integration@1.8.0
+
+## 0.2.12-next.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.20.1-next.2
+  - @backstage/plugin-scaffolder-node@0.2.10-next.2
+
+## 0.2.12-next.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.20.1-next.1
+  - @backstage/integration@1.8.0
+  - @backstage/config@1.1.1
+  - @backstage/plugin-scaffolder-node@0.2.10-next.1
+  - @backstage/errors@1.2.3
+
+## 0.2.12-next.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.20.1-next.0
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/integration@1.8.0
+  - @backstage/plugin-scaffolder-node@0.2.10-next.0
+
+## 0.2.11
+
+### Patch Changes
+
+- 219d7f0: Extract some more actions to this library
+- 0cbb03b: Fixing regular expression ReDoS with zod packages. Upgrading to latest. ref: https://security.snyk.io/vuln/SNYK-JS-ZOD-5925617
+- Updated dependencies
+  - @backstage/backend-common@0.20.0
+  - @backstage/plugin-scaffolder-node@0.2.9
+  - @backstage/integration@1.8.0
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+
+## 0.2.11-next.3
+
+### Patch Changes
+
+- 219d7f0: Extract some more actions to this library
+- Updated dependencies
+  - @backstage/plugin-scaffolder-node@0.2.9-next.3
+  - @backstage/backend-common@0.20.0-next.3
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/integration@1.8.0-next.1
+
+## 0.2.11-next.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/integration@1.8.0-next.1
+  - @backstage/plugin-scaffolder-node@0.2.9-next.2
+
+## 0.2.11-next.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/integration@1.8.0-next.1
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/plugin-scaffolder-node@0.2.9-next.1
+
+## 0.2.11-next.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/integration@1.8.0-next.0
+  - @backstage/plugin-scaffolder-node@0.2.9-next.0
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+
+## 0.2.10
+
+### Patch Changes
+
+- 26ca97ebaa: Add examples for `gitlab:projectAccessToken:create` scaffolder action & improve related tests
+- Updated dependencies
+  - @backstage/integration@1.7.2
+  - @backstage/plugin-scaffolder-node@0.2.8
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+
+## 0.2.10-next.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/plugin-scaffolder-node@0.2.8-next.2
+
 ## 0.2.10-next.1
 
 ### Patch Changes

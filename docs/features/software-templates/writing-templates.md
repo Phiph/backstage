@@ -231,31 +231,47 @@ spec:
             inputType: tel
 ```
 
-### Hide or mask sensitive data on Review step
+### Using Secrets
 
-Sometimes, specially in custom fields, you collect some data on Create form that
-must not be shown to the user on Review step. To hide or mask this data, you can
-use `ui:widget: password` or set some properties of `ui:backstage`:
+You may want to mark things as secret and make sure that these values are protected and not available through REST endpoints. You can do this by using the built in `ui:field: Secret`.
+
+You can define this property as any normal parameter, however the consumption of this parameter will not be available through `${{ parameters.myKey }}` you will instead need to use `${{ secrets.myKey }}` in your `template.yaml`.
+
+Parameters will be automatically masked in the review step.
 
 ```yaml
-- title: Hide or mask values
-  properties:
-    password:
-      title: Password
-      type: string
-      ui:widget: password # will print '******' as value for property 'password' on Review Step
-    masked:
-      title: Masked
-      type: string
-      ui:backstage:
-        review:
-          mask: '<some-value-to-show>' # will print '<some-value-to-show>' as value for property 'Masked' on Review Step
-    hidden:
-      title: Hidden
-      type: string
-      ui:backstage:
-        review:
-          show: false # won't print any info about 'hidden' property on Review Step
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: v1beta3-demo
+  title: Test Action template
+  description: scaffolder v1beta3 template demo
+spec:
+  owner: backstage/techdocs-core
+  type: service
+
+  parameters:
+    - title: Authenticaion
+      description: Provide authentication for the resource
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          # use the built in Secret field extension
+          ui:field: Secret
+        password:
+          type: string
+          ui:field: Secret
+
+  steps:
+    - id: setupAuthentication
+      action: auth:create
+      input:
+        # make sure to use ${{ secrets.parameterName }} to reference these values
+        username: ${{ secrets.username }}
+        password: ${{ secrets.password }}
 ```
 
 ### Custom step layouts

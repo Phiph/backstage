@@ -21,10 +21,10 @@ import {
   ReceiveMessageCommandInput,
   SQSClient,
 } from '@aws-sdk/client-sqs';
+import { LoggerService } from '@backstage/backend-plugin-api';
 import { PluginTaskScheduler } from '@backstage/backend-tasks';
 import { Config } from '@backstage/config';
-import { EventBroker, EventPublisher } from '@backstage/plugin-events-node';
-import { Logger } from 'winston';
+import { EventsService } from '@backstage/plugin-events-node';
 import { AwsSqsEventSourceConfig, readConfig } from './config';
 
 /**
@@ -34,28 +34,34 @@ import { AwsSqsEventSourceConfig, readConfig } from './config';
  * @public
  */
 // TODO(pjungermann): add prom metrics? (see plugins/catalog-backend/src/util/metrics.ts, etc.)
-export class AwsSqsConsumingEventPublisher implements EventPublisher {
+export class AwsSqsConsumingEventPublisher {
   private readonly topic: string;
   private readonly receiveParams: ReceiveMessageCommandInput;
   private readonly sqs: SQSClient;
   private readonly queueUrl: string;
   private readonly taskTimeoutSeconds: number;
   private readonly waitTimeAfterEmptyReceiveMs;
-  private eventBroker?: EventBroker;
 
   static fromConfig(env: {
     config: Config;
-    logger: Logger;
+    events: EventsService;
+    logger: LoggerService;
     scheduler: PluginTaskScheduler;
   }): AwsSqsConsumingEventPublisher[] {
     return readConfig(env.config).map(
       config =>
-        new AwsSqsConsumingEventPublisher(env.logger, env.scheduler, config),
+        new AwsSqsConsumingEventPublisher(
+          env.logger,
+          env.events,
+          env.scheduler,
+          config,
+        ),
     );
   }
 
   private constructor(
-    private readonly logger: Logger,
+    private readonly logger: LoggerService,
+    private readonly events: EventsService,
     private readonly scheduler: PluginTaskScheduler,
     config: AwsSqsEventSourceConfig,
   ) {
@@ -80,12 +86,7 @@ export class AwsSqsConsumingEventPublisher implements EventPublisher {
       config.waitTimeAfterEmptyReceive.as('milliseconds');
   }
 
-  async setEventBroker(eventBroker: EventBroker): Promise<void> {
-    this.eventBroker = eventBroker;
-    return this.start();
-  }
-
-  private async start(): Promise<void> {
+  async start(): Promise<void> {
     const id = `events.awsSqs.publisher:${this.topic}`;
     const logger = this.logger.child({
       class: AwsSqsConsumingEventPublisher.prototype.constructor.name,
@@ -111,7 +112,7 @@ export class AwsSqsConsumingEventPublisher implements EventPublisher {
   }
 
   private async deleteMessages(messages?: Message[]): Promise<void> {
-    if (!messages) {
+    if (!messages || messages.length === 0) {
       return;
     }
 
@@ -129,7 +130,7 @@ export class AwsSqsConsumingEventPublisher implements EventPublisher {
       const result = await this.sqs.send(
         new DeleteMessageBatchCommand(deleteParams),
       );
-      if (result.Failed) {
+      if (result.Failed && result.Failed.length > 0) {
         this.logger.error(
           `Failed to delete ${result.Failed!.length} of ${
             messages.length
@@ -172,7 +173,7 @@ export class AwsSqsConsumingEventPublisher implements EventPublisher {
           }
         });
 
-        this.eventBroker!.publish({
+        this.events.publish({
           topic: this.topic,
           eventPayload,
           metadata,

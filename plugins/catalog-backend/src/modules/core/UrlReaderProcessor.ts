@@ -17,10 +17,10 @@
 import { UrlReader } from '@backstage/backend-common';
 import { Entity } from '@backstage/catalog-model';
 import { assertError } from '@backstage/errors';
-import parseGitUrl from 'git-url-parse';
 import limiterFactory from 'p-limit';
 import { Logger } from 'winston';
 import { LocationSpec } from '@backstage/plugin-catalog-common';
+import parseGitUrl from 'git-url-parse';
 import {
   CatalogProcessor,
   CatalogProcessorCache,
@@ -124,6 +124,7 @@ export class UrlReaderProcessor implements CatalogProcessor {
   ): Promise<{ response: { data: Buffer; url: string }[]; etag?: string }> {
     // Does it contain globs? I.e. does it contain asterisks or question marks
     // (no curly braces for now)
+
     const { filepath } = parseGitUrl(location);
     if (filepath?.match(/[*?]/)) {
       const limiter = limiterFactory(5);

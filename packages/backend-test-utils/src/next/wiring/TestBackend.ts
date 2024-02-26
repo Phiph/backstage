@@ -66,9 +66,11 @@ export interface TestBackend extends Backend {
 }
 
 export const defaultServiceFactories = [
+  mockServices.auth.factory(),
   mockServices.cache.factory(),
   mockServices.rootConfig.factory(),
   mockServices.database.factory(),
+  mockServices.httpAuth.factory(),
   mockServices.httpRouter.factory(),
   mockServices.identity.factory(),
   mockServices.lifecycle.factory(),
@@ -156,7 +158,7 @@ function createExtensionPointTestModules(
     modules.push(
       createBackendModule({
         pluginId,
-        moduleId: 'testExtensionPointRegistration',
+        moduleId: 'test-extension-point-registration',
         register(reg) {
           for (const id of pluginExtensionPointIds) {
             const tuple = extensionPointMap.get(id)!;

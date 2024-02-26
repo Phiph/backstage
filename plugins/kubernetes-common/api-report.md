@@ -20,6 +20,7 @@ import { V1Job } from '@kubernetes/client-node';
 import { V1LimitRange } from '@kubernetes/client-node';
 import { V1Pod } from '@kubernetes/client-node';
 import { V1ReplicaSet } from '@kubernetes/client-node';
+import { V1ResourceQuota } from '@kubernetes/client-node';
 import { V1Service } from '@kubernetes/client-node';
 import { V1StatefulSet } from '@kubernetes/client-node';
 
@@ -39,12 +40,20 @@ export const ANNOTATION_KUBERNETES_AWS_ASSUME_ROLE =
   'kubernetes.io/aws-assume-role';
 
 // @public
+export const ANNOTATION_KUBERNETES_AWS_CLUSTER_ID =
+  'kubernetes.io/x-k8s-aws-id';
+
+// @public
 export const ANNOTATION_KUBERNETES_AWS_EXTERNAL_ID =
   'kubernetes.io/aws-external-id';
 
 // @public
 export const ANNOTATION_KUBERNETES_DASHBOARD_APP =
   'kubernetes.io/dashboard-app';
+
+// @public
+export const ANNOTATION_KUBERNETES_DASHBOARD_PARAMETERS =
+  'kubernetes.io/dashboard-parameters';
 
 // @public
 export const ANNOTATION_KUBERNETES_DASHBOARD_URL =
@@ -103,6 +112,7 @@ export interface ClusterAttributes {
   dashboardParameters?: JsonObject;
   dashboardUrl?: string;
   name: string;
+  title?: string;
 }
 
 // @public (undocumented)
@@ -245,6 +255,7 @@ export type FetchResponse =
   | ConfigMapFetchResponse
   | DeploymentFetchResponse
   | LimitRangeFetchResponse
+  | ResourceQuotaFetchResponse
   | ReplicaSetsFetchResponse
   | HorizontalPodAutoscalersFetchResponse
   | JobsFetchResponse
@@ -263,6 +274,8 @@ export interface GroupedResponses extends DeploymentResources {
   cronJobs: V1CronJob[];
   // (undocumented)
   customResources: any[];
+  // (undocumented)
+  daemonSets: V1DaemonSet[];
   // (undocumented)
   ingresses: V1Ingress[];
   // (undocumented)
@@ -397,6 +410,14 @@ export interface ReplicaSetsFetchResponse {
   resources: Array<V1ReplicaSet>;
   // (undocumented)
   type: 'replicasets';
+}
+
+// @public (undocumented)
+export interface ResourceQuotaFetchResponse {
+  // (undocumented)
+  resources: Array<V1ResourceQuota>;
+  // (undocumented)
+  type: 'resourcequotas';
 }
 
 // @public

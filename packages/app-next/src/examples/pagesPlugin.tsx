@@ -27,7 +27,9 @@ import { Route, Routes } from 'react-router-dom';
 
 const indexRouteRef = createRouteRef();
 const page1RouteRef = createRouteRef();
-export const externalPageXRouteRef = createExternalRouteRef();
+export const externalPageXRouteRef = createExternalRouteRef({
+  defaultTarget: 'pages.pageX',
+});
 export const pageXRouteRef = createRouteRef();
 // const page2RouteRef = createSubRouteRef({
 //   id: 'page2',
@@ -36,7 +38,7 @@ export const pageXRouteRef = createRouteRef();
 // });
 
 const IndexPage = createPageExtension({
-  id: 'index',
+  name: 'index',
   defaultPath: '/',
   routeRef: indexRouteRef,
   loader: async () => {
@@ -68,7 +70,7 @@ const IndexPage = createPageExtension({
 });
 
 const Page1 = createPageExtension({
-  id: 'page1',
+  name: 'page1',
   defaultPath: '/page1',
   routeRef: page1RouteRef,
   loader: async () => {
@@ -102,7 +104,7 @@ const Page1 = createPageExtension({
 });
 
 const ExternalPage = createPageExtension({
-  id: 'pageX',
+  name: 'pageX',
   defaultPath: '/pageX',
   routeRef: pageXRouteRef,
   loader: async () => {

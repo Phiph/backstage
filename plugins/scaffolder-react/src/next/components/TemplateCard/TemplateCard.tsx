@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { RELATION_OWNED_BY } from '@backstage/catalog-model';
 import { MarkdownContent, UserIcon } from '@backstage/core-components';
 import { IconComponent, useApp } from '@backstage/core-plugin-api';
@@ -21,7 +22,6 @@ import {
   getEntityRelations,
 } from '@backstage/plugin-catalog-react';
 import { TemplateEntityV1beta3 } from '@backstage/plugin-scaffolder-common';
-import { BackstageTheme } from '@backstage/theme';
 import {
   Box,
   Card,
@@ -32,13 +32,14 @@ import {
   Button,
   Grid,
   makeStyles,
+  Theme,
 } from '@material-ui/core';
 import LanguageIcon from '@material-ui/icons/Language';
 import React from 'react';
 import { CardHeader } from './CardHeader';
 import { CardLink } from './CardLink';
 
-const useStyles = makeStyles<BackstageTheme>(theme => ({
+const useStyles = makeStyles<Theme>(theme => ({
   box: {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
@@ -100,6 +101,10 @@ export const TemplateCard = (props: TemplateCardProps) => {
   const app = useApp();
   const iconResolver = (key?: string): IconComponent =>
     key ? app.getSystemIcon(key) ?? LanguageIcon : LanguageIcon;
+  const hasTags = !!template.metadata.tags?.length;
+  const hasLinks =
+    !!props.additionalLinks?.length || !!template.metadata.links?.length;
+  const displayDefaultDivider = !hasTags && !hasLinks;
 
   return (
     <Card>
@@ -114,15 +119,20 @@ export const TemplateCard = (props: TemplateCardProps) => {
               />
             </Box>
           </Grid>
-          {(template.metadata.tags?.length ?? 0) > 0 && (
+          {displayDefaultDivider && (
+            <Grid item xs={12}>
+              <Divider data-testid="template-card-separator" />
+            </Grid>
+          )}
+          {hasTags && (
             <>
               <Grid item xs={12}>
-                <Divider />
+                <Divider data-testid="template-card-separator--tags" />
               </Grid>
               <Grid item xs={12}>
                 <Grid container spacing={2}>
                   {template.metadata.tags?.map(tag => (
-                    <Grid item>
+                    <Grid key={`grid-${tag}`} item>
                       <Chip
                         style={{ margin: 0 }}
                         size="small"
@@ -135,10 +145,10 @@ export const TemplateCard = (props: TemplateCardProps) => {
               </Grid>
             </>
           )}
-          {(props.additionalLinks || template.metadata.links?.length) && (
+          {hasLinks && (
             <>
               <Grid item xs={12}>
-                <Divider />
+                <Divider data-testid="template-card-separator--links" />
               </Grid>
               <Grid item xs={12}>
                 <Grid container spacing={2}>
@@ -174,6 +184,7 @@ export const TemplateCard = (props: TemplateCardProps) => {
                   style={{ marginLeft: '8px' }}
                   entityRefs={ownedByRelations}
                   defaultKind="Group"
+                  hideIcons
                 />
               </>
             )}

@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-import {
-  Box,
-  Chip,
-  Tooltip,
-  Typography,
-  makeStyles,
-  Grid,
-  useTheme,
-} from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import Chip from '@material-ui/core/Chip';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { InfoCard, Progress } from '@backstage/core-components';
 import Alert from '@material-ui/lab/Alert';
 import { DateTime } from 'luxon';
@@ -30,6 +27,8 @@ import React from 'react';
 import slugify from 'slugify';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { useLanguages } from '../../hooks';
+import { useTranslationRef } from '@backstage/core-plugin-api/alpha';
+import { linguistTranslationRef } from '../../translation';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
@@ -59,6 +58,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const LinguistCard = () => {
+  const { t } = useTranslationRef(linguistTranslationRef);
   const classes = useStyles();
   const theme = useTheme();
   const { entity } = useEntity();
@@ -73,12 +73,10 @@ export const LinguistCard = () => {
 
   if (items && items.languageCount === 0 && items.totalBytes === 0) {
     return (
-      <InfoCard title="Languages" className={classes.infoCard}>
+      <InfoCard title={t('entityCard.title')} className={classes.infoCard}>
         <Grid container spacing={3}>
           <Box p={2}>
-            <Typography>
-              There is currently no language data for this entity.
-            </Typography>
+            <Typography>{t('entityCard.noData')}</Typography>
           </Box>
         </Grid>
       </InfoCard>
@@ -91,7 +89,7 @@ export const LinguistCard = () => {
   const processedDate = items?.processedDate;
 
   return breakdown && processedDate ? (
-    <InfoCard title="Languages" className={classes.infoCard}>
+    <InfoCard title={t('entityCard.title')} className={classes.infoCard}>
       <Box className={classes.barContainer}>
         {breakdown.map((language, index: number) => {
           barWidth = barWidth + language.percentage;

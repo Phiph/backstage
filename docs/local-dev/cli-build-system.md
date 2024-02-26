@@ -258,7 +258,7 @@ When building CommonJS or ESM output, the build commands will always use
 `src/index.ts` as the entrypoint. All non-relative modules imports are considered
 external, meaning the Rollup build will only compile the source code of the package
 itself. All import statements of external dependencies, even within the same
-monorepo, will stay intact.
+[monorepo](../references/glossary.md#monorepo), will stay intact.
 
 The build of the type definitions works quite differently. The entrypoint of the
 type definition build is the relative location of the package within the
@@ -295,7 +295,8 @@ Webpack configuration itself varies very little between the frontend development
 and production bundling, so we'll dive more into the configuration in the
 production section below. The main differences are that `process.env.NODE_ENV`
 is set to `'development'`, minification is disabled, cheap source maps are used,
-and [React Hot Loader](https://github.com/gaearon/react-hot-loader) is enabled.
+and [React Refresh](https://github.com/pmmmwh/react-refresh-webpack-plugin#readme)
+is enabled.
 
 If you prefer to run type checking and linting as part of the Webpack process,
 you can enable usage of the
@@ -306,11 +307,12 @@ support for them instead.
 
 ### Frontend Production
 
-The frontend production bundling creates your typical web content bundle, all
-contained within a single folder, ready for static serving. It is used when building
-packages with the `'frontend'` role, and unlike the development bundling there is no way to
-build a production bundle of an individual plugin. The output of the bundling
-process is written to the `dist` folder in the package.
+The frontend production bundling creates your typical web content
+[bundle](../references/glossary.md#bundle), all contained within a single
+folder, ready for static serving. It is used when building packages with the
+`'frontend'` role, and unlike the development bundling there is no way to
+build a production bundle of an individual plugin.
+The output of the bundling process is written to the `dist` folder in the package.
 
 Just like the development bundling, the production bundling is based on
 [Webpack](https://webpack.js.org/). It uses the
@@ -589,22 +591,25 @@ For your productivity working with unit tests it's quite essential to have your 
 
 A complete launch configuration for VS Code debugging may look like this:
 
-```json
+```jsonc
 {
   "type": "node",
-  "name": "vscode-jest-tests",
+  "name": "vscode-jest-tests.v2",
   "request": "launch",
+  "args": [
+    "repo",
+    "test",
+    "--runInBand",
+    "--watchAll=false",
+    "--testNamePattern",
+    "${jest.testNamePattern}",
+    "--runTestsByPath",
+    "${jest.testFile}"
+  ],
   "console": "integratedTerminal",
   "internalConsoleOptions": "neverOpen",
   "disableOptimisticBPs": true,
-  "program": "${workspaceFolder}/node_modules/.bin/jest",
-  "cwd": "${workspaceFolder}",
-  "args": [
-    "--config",
-    "node_modules/@backstage/cli/config/jest.js",
-    "--runInBand",
-    "--watchAll=false"
-  ]
+  "program": "${workspaceFolder}/node_modules/.bin/backstage-cli"
 }
 ```
 

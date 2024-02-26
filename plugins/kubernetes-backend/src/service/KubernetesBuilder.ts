@@ -29,7 +29,6 @@ import { Logger } from 'winston';
 
 import { getCombinedClusterSupplier } from '../cluster-locator';
 import {
-  AuthenticationStrategy,
   AnonymousStrategy,
   DispatchStrategy,
   GoogleStrategy,
@@ -43,17 +42,22 @@ import {
 
 import { addResourceRoutesToRouter } from '../routes/resourcesRoutes';
 import { MultiTenantServiceLocator } from '../service-locator/MultiTenantServiceLocator';
+import { SingleTenantServiceLocator } from '../service-locator/SingleTenantServiceLocator';
 import {
-  CustomResource,
-  KubernetesClustersSupplier,
-  KubernetesFetcher,
   KubernetesObjectsProviderOptions,
-  KubernetesObjectTypes,
-  KubernetesServiceLocator,
   ObjectsByEntityRequest,
   ServiceLocatorMethod,
 } from '../types/types';
-import { KubernetesObjectsProvider } from '@backstage/plugin-kubernetes-node';
+import {
+  AuthenticationStrategy,
+  AuthMetadata,
+  CustomResource,
+  KubernetesClustersSupplier,
+  KubernetesFetcher,
+  KubernetesObjectsProvider,
+  KubernetesObjectTypes,
+  KubernetesServiceLocator,
+} from '@backstage/plugin-kubernetes-node';
 import {
   DEFAULT_OBJECTS,
   KubernetesFanOutHandler,
@@ -239,6 +243,7 @@ export class KubernetesBuilder {
       config,
       this.env.catalogApi,
       new DispatchStrategy({ authStrategyMap: this.getAuthStrategyMap() }),
+      this.env.logger,
       refreshInterval,
     );
 
@@ -276,12 +281,16 @@ export class KubernetesBuilder {
         this.serviceLocator =
           this.buildMultiTenantServiceLocator(clusterSupplier);
         break;
+      case 'singleTenant':
+        this.serviceLocator =
+          this.buildSingleTenantServiceLocator(clusterSupplier);
+        break;
       case 'http':
         this.serviceLocator = this.buildHttpServiceLocator(clusterSupplier);
         break;
       default:
         throw new Error(
-          `Unsupported kubernetes.clusterLocatorMethod "${method}"`,
+          `Unsupported kubernetes.serviceLocatorMethod "${method}"`,
         );
     }
 
@@ -292,6 +301,12 @@ export class KubernetesBuilder {
     clusterSupplier: KubernetesClustersSupplier,
   ): KubernetesServiceLocator {
     return new MultiTenantServiceLocator(clusterSupplier);
+  }
+
+  protected buildSingleTenantServiceLocator(
+    clusterSupplier: KubernetesClustersSupplier,
+  ): KubernetesServiceLocator {
+    return new SingleTenantServiceLocator(clusterSupplier);
   }
 
   protected buildHttpServiceLocator(
@@ -356,11 +371,21 @@ export class KubernetesBuilder {
         items: clusterDetails.map(cd => {
           const oidcTokenProvider =
             cd.authMetadata[ANNOTATION_KUBERNETES_OIDC_TOKEN_PROVIDER];
+          const authProvider =
+            cd.authMetadata[ANNOTATION_KUBERNETES_AUTH_PROVIDER];
+          const strategy = this.getAuthStrategyMap()[authProvider];
+          let auth: AuthMetadata = {};
+          if (strategy) {
+            auth = strategy.presentAuthMetadata(cd.authMetadata);
+          }
+
           return {
             name: cd.name,
+            title: cd.title,
             dashboardUrl: cd.dashboardUrl,
-            authProvider: cd.authMetadata[ANNOTATION_KUBERNETES_AUTH_PROVIDER],
+            authProvider,
             ...(oidcTokenProvider && { oidcTokenProvider }),
+            ...(auth && Object.keys(auth).length !== 0 && { auth }),
           };
         }),
       });

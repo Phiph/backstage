@@ -28,11 +28,18 @@ export function useReadme(entity: Entity): {
   error?: Error;
 } {
   const api = useApi(azureDevOpsApiRef);
-  const { project, repo } = getAnnotationValuesFromEntity(entity);
 
-  const { value, loading, error } = useAsync(async () => {
-    return await api.getReadme({ project, repo: repo as string });
-  }, [api, project, repo]);
+  const { value, loading, error } = useAsync(() => {
+    const { project, repo, host, org, readmePath } =
+      getAnnotationValuesFromEntity(entity);
+    return api.getReadme({
+      project,
+      repo: repo as string,
+      host,
+      org,
+      path: readmePath,
+    });
+  }, [api]);
 
   return {
     item: value,

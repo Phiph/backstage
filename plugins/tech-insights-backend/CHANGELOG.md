@@ -1,5 +1,308 @@
 # @backstage/plugin-tech-insights-backend
 
+## 0.5.24
+
+### Patch Changes
+
+- 7201af3: Add support for the new backend system.
+
+  A new backend plugin for the tech-insights backend
+  was added and exported as `default`.
+
+  You can use it with the new backend system like
+
+  ```ts title="packages/backend/src/index.ts"
+  backend.add(import('@backstage/plugin-tech-insights-backend'));
+  ```
+
+- 9aac2b0: Use `--cwd` as the first `yarn` argument
+- 341c2a2: Move `FactRetrieverRegistry` and `PersistenceContext` to `@backstage/plugin-tech-insights-node`.
+
+  Original exports are marked as deprecated and re-export the moved types.
+
+  Please replace uses like
+
+  ```ts
+  import {
+    FactRetrieverRegistry,
+    PersistenceContext,
+  } from '@backstage/plugin-tech-insights-backend';
+  ```
+
+  with
+
+  ```ts
+  import {
+    FactRetrieverRegistry,
+    PersistenceContext,
+  } from '@backstage/plugin-tech-insights-node';
+  ```
+
+- Updated dependencies
+  - @backstage/backend-common@0.21.0
+  - @backstage/plugin-tech-insights-node@0.4.16
+  - @backstage/backend-plugin-api@0.6.10
+  - @backstage/backend-tasks@0.5.15
+  - @backstage/catalog-model@1.4.4
+  - @backstage/catalog-client@1.6.0
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/types@1.1.1
+  - @backstage/plugin-tech-insights-common@0.2.12
+
+## 0.5.24-next.3
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.21.0-next.3
+  - @backstage/backend-tasks@0.5.15-next.3
+  - @backstage/plugin-tech-insights-node@0.4.16-next.3
+  - @backstage/backend-plugin-api@0.6.10-next.3
+  - @backstage/catalog-client@1.6.0-next.1
+  - @backstage/catalog-model@1.4.4-next.0
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/types@1.1.1
+  - @backstage/plugin-tech-insights-common@0.2.12
+
+## 0.5.24-next.2
+
+### Patch Changes
+
+- 7201af3: Add support for the new backend system.
+
+  A new backend plugin for the tech-insights backend
+  was added and exported as `default`.
+
+  You can use it with the new backend system like
+
+  ```ts title="packages/backend/src/index.ts"
+  backend.add(import('@backstage/plugin-tech-insights-backend'));
+  ```
+
+- 9aac2b0: Use `--cwd` as the first `yarn` argument
+- 341c2a2: Move `FactRetrieverRegistry` and `PersistenceContext` to `@backstage/plugin-tech-insights-node`.
+
+  Original exports are marked as deprecated and re-export the moved types.
+
+  Please replace uses like
+
+  ```ts
+  import {
+    FactRetrieverRegistry,
+    PersistenceContext,
+  } from '@backstage/plugin-tech-insights-backend';
+  ```
+
+  with
+
+  ```ts
+  import {
+    FactRetrieverRegistry,
+    PersistenceContext,
+  } from '@backstage/plugin-tech-insights-node';
+  ```
+
+- Updated dependencies
+  - @backstage/backend-common@0.21.0-next.2
+  - @backstage/plugin-tech-insights-node@0.4.16-next.2
+  - @backstage/backend-plugin-api@0.6.10-next.2
+  - @backstage/backend-tasks@0.5.15-next.2
+  - @backstage/config@1.1.1
+  - @backstage/catalog-client@1.6.0-next.1
+  - @backstage/catalog-model@1.4.4-next.0
+  - @backstage/errors@1.2.3
+  - @backstage/types@1.1.1
+  - @backstage/plugin-tech-insights-common@0.2.12
+
+## 0.5.24-next.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/catalog-model@1.4.4-next.0
+  - @backstage/catalog-client@1.6.0-next.1
+  - @backstage/backend-common@0.21.0-next.1
+  - @backstage/backend-tasks@0.5.15-next.1
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/types@1.1.1
+  - @backstage/plugin-tech-insights-common@0.2.12
+  - @backstage/plugin-tech-insights-node@0.4.16-next.1
+
+## 0.5.24-next.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.21.0-next.0
+  - @backstage/catalog-client@1.6.0-next.0
+  - @backstage/backend-tasks@0.5.15-next.0
+  - @backstage/plugin-tech-insights-node@0.4.16-next.0
+  - @backstage/catalog-model@1.4.3
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/types@1.1.1
+  - @backstage/plugin-tech-insights-common@0.2.12
+
+## 0.5.23
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.20.1
+  - @backstage/catalog-client@1.5.2
+  - @backstage/plugin-tech-insights-node@0.4.15
+  - @backstage/backend-tasks@0.5.14
+  - @backstage/catalog-model@1.4.3
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/types@1.1.1
+  - @backstage/plugin-tech-insights-common@0.2.12
+
+## 0.5.23-next.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.20.1-next.2
+  - @backstage/backend-tasks@0.5.14-next.2
+  - @backstage/plugin-tech-insights-node@0.4.15-next.2
+
+## 0.5.23-next.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.20.1-next.1
+  - @backstage/config@1.1.1
+  - @backstage/backend-tasks@0.5.14-next.1
+  - @backstage/plugin-tech-insights-node@0.4.15-next.1
+  - @backstage/catalog-client@1.5.2-next.0
+  - @backstage/catalog-model@1.4.3
+  - @backstage/errors@1.2.3
+  - @backstage/types@1.1.1
+  - @backstage/plugin-tech-insights-common@0.2.12
+
+## 0.5.23-next.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.20.1-next.0
+  - @backstage/catalog-client@1.5.2-next.0
+  - @backstage/plugin-tech-insights-node@0.4.15-next.0
+  - @backstage/backend-tasks@0.5.14-next.0
+  - @backstage/catalog-model@1.4.3
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/types@1.1.1
+  - @backstage/plugin-tech-insights-common@0.2.12
+
+## 0.5.22
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.20.0
+  - @backstage/catalog-client@1.5.0
+  - @backstage/backend-tasks@0.5.13
+  - @backstage/plugin-tech-insights-node@0.4.14
+  - @backstage/catalog-model@1.4.3
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/types@1.1.1
+  - @backstage/plugin-tech-insights-common@0.2.12
+
+## 0.5.22-next.3
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.20.0-next.3
+  - @backstage/backend-tasks@0.5.13-next.3
+  - @backstage/catalog-client@1.5.0-next.1
+  - @backstage/catalog-model@1.4.3
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/types@1.1.1
+  - @backstage/plugin-tech-insights-common@0.2.12
+  - @backstage/plugin-tech-insights-node@0.4.14-next.3
+
+## 0.5.22-next.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.20.0-next.2
+  - @backstage/catalog-client@1.5.0-next.1
+  - @backstage/backend-tasks@0.5.13-next.2
+  - @backstage/catalog-model@1.4.3
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/types@1.1.1
+  - @backstage/plugin-tech-insights-common@0.2.12
+  - @backstage/plugin-tech-insights-node@0.4.14-next.2
+
+## 0.5.22-next.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/catalog-client@1.5.0-next.0
+  - @backstage/backend-common@0.20.0-next.1
+  - @backstage/backend-tasks@0.5.13-next.1
+  - @backstage/catalog-model@1.4.3
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/types@1.1.1
+  - @backstage/plugin-tech-insights-common@0.2.12
+  - @backstage/plugin-tech-insights-node@0.4.14-next.1
+
+## 0.5.22-next.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.20.0-next.0
+  - @backstage/backend-tasks@0.5.13-next.0
+  - @backstage/plugin-tech-insights-node@0.4.14-next.0
+  - @backstage/catalog-client@1.4.6
+  - @backstage/catalog-model@1.4.3
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/types@1.1.1
+  - @backstage/plugin-tech-insights-common@0.2.12
+
+## 0.5.21
+
+### Patch Changes
+
+- 013611b42e: `knex` has been bumped to major version 3 and `better-sqlite3` to major version 9, which deprecate node 16 support.
+- 193ad022bb: Add `factRetrieverId` to the fact retriever's logger metadata.
+- Updated dependencies
+  - @backstage/backend-common@0.19.9
+  - @backstage/backend-tasks@0.5.12
+  - @backstage/catalog-client@1.4.6
+  - @backstage/catalog-model@1.4.3
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/types@1.1.1
+  - @backstage/plugin-tech-insights-common@0.2.12
+  - @backstage/plugin-tech-insights-node@0.4.13
+
+## 0.5.21-next.2
+
+### Patch Changes
+
+- [#20570](https://github.com/backstage/backstage/pull/20570) [`013611b42e`](https://github.com/backstage/backstage/commit/013611b42ed457fefa9bb85fddf416cf5e0c1f76) Thanks [@freben](https://github.com/freben)! - `knex` has been bumped to major version 3 and `better-sqlite3` to major version 9, which deprecate node 16 support.
+
+- Updated dependencies
+  - @backstage/backend-common@0.19.9-next.2
+  - @backstage/backend-tasks@0.5.12-next.2
+  - @backstage/plugin-tech-insights-node@0.4.13-next.2
+
 ## 0.5.21-next.1
 
 ### Patch Changes

@@ -17,7 +17,7 @@ application.
 
 ```bash
 # From your Backstage root directory
-yarn add --cwd packages/app @backstage/plugin-kubernetes
+yarn --cwd packages/app add @backstage/plugin-kubernetes
 ```
 
 Once the package has been installed, you need to import the plugin in your app
@@ -55,7 +55,7 @@ Navigate to `packages/backend` of your Backstage app, and install the
 
 ```bash
 # From your Backstage root directory
-yarn add --cwd packages/backend @backstage/plugin-kubernetes-backend
+yarn --cwd packages/backend add @backstage/plugin-kubernetes-backend
 ```
 
 Create a file called `kubernetes.ts` inside `packages/backend/src/plugins/` and
@@ -130,7 +130,7 @@ export class CustomClustersSupplier implements KubernetesClustersSupplier {
 
   static create(refreshInterval: Duration) {
     const clusterSupplier = new CustomClustersSupplier();
-    // setup refresh, e.g. using a copy of https://github.com/backstage/backstage/blob/master/plugins/search-backend-node/src/runPeriodically.ts
+    // setup refresh, e.g. using a copy of https://github.com/backstage/backstage/blob/master/plugins/kubernetes-backend/src/service/runPeriodically.ts
     runPeriodically(
       () => clusterSupplier.refreshClusters(),
       refreshInterval.toMillis(),

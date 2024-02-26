@@ -27,6 +27,7 @@ import {
   V1LimitRange,
   V1Pod,
   V1ReplicaSet,
+  V1ResourceQuota,
   V1Service,
   V1StatefulSet,
 } from '@kubernetes/client-node';
@@ -66,9 +67,13 @@ export interface KubernetesRequestBody {
 /** @public */
 export interface ClusterAttributes {
   /**
-   * Specifies the name of the Kubernetes cluster.
+   * Name of the Kubernetes cluster; used as an internal identifier.
    */
   name: string;
+  /**
+   * Human-readable name for the cluster, to be dispayed in UIs.
+   */
+  title?: string;
   /**
    * Specifies the link to the Kubernetes dashboard managing this cluster.
    * @remarks
@@ -125,6 +130,7 @@ export type FetchResponse =
   | ConfigMapFetchResponse
   | DeploymentFetchResponse
   | LimitRangeFetchResponse
+  | ResourceQuotaFetchResponse
   | ReplicaSetsFetchResponse
   | HorizontalPodAutoscalersFetchResponse
   | JobsFetchResponse
@@ -169,6 +175,12 @@ export interface ReplicaSetsFetchResponse {
 export interface LimitRangeFetchResponse {
   type: 'limitranges';
   resources: Array<V1LimitRange>;
+}
+
+/** @public */
+export interface ResourceQuotaFetchResponse {
+  type: 'resourcequotas';
+  resources: Array<V1ResourceQuota>;
 }
 
 /** @public */
@@ -282,4 +294,5 @@ export interface GroupedResponses extends DeploymentResources {
   cronJobs: V1CronJob[];
   customResources: any[];
   statefulsets: V1StatefulSet[];
+  daemonSets: V1DaemonSet[];
 }

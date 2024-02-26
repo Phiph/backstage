@@ -26,6 +26,7 @@ import { Router } from 'express';
 import request from 'supertest';
 
 import { startTestBackend } from './TestBackend';
+import { mockCredentials } from '../services';
 
 // This bit makes sure that test backends are cleaned up properly
 let globalTestBackendHasBeenStopped = false;
@@ -33,8 +34,8 @@ beforeAll(async () => {
   await startTestBackend({
     features: [
       createBackendModule({
-        moduleId: 'test.module',
         pluginId: 'test',
+        moduleId: 'test-module',
         register(env) {
           env.registerInit({
             deps: { lifecycle: coreServices.lifecycle },
@@ -128,8 +129,8 @@ describe('TestBackend', () => {
     });
 
     const testModule = createBackendModule({
-      moduleId: 'test.module',
       pluginId: 'test',
+      moduleId: 'test-module',
       register(env) {
         env.registerInit({
           deps: {
@@ -153,8 +154,8 @@ describe('TestBackend', () => {
     const shutdownSpy = jest.fn();
 
     const testModule = createBackendModule({
-      moduleId: 'test.module',
       pluginId: 'test',
+      moduleId: 'test-module',
       register(env) {
         env.registerInit({
           deps: {
@@ -199,9 +200,11 @@ describe('TestBackend', () => {
             scheduler: coreServices.scheduler,
             tokenManager: coreServices.tokenManager,
             urlReader: coreServices.urlReader,
+            auth: coreServices.auth,
+            httpAuth: coreServices.httpAuth,
           },
           async init(deps) {
-            expect(Object.keys(deps)).toHaveLength(15);
+            expect(Object.keys(deps)).toHaveLength(17);
             expect(Object.values(deps)).not.toContain(undefined);
           },
         });
@@ -232,7 +235,9 @@ describe('TestBackend', () => {
 
     const { server } = await startTestBackend({ features: [testPlugin()] });
 
-    const res = await request(server).get('/api/test/ping-me');
+    const res = await request(server)
+      .get('/api/test/ping-me')
+      .set('authorization', mockCredentials.user.header());
     expect(res.status).toEqual(200);
     expect(res.body).toEqual({ message: 'pong' });
   });
@@ -307,7 +312,7 @@ describe('TestBackend', () => {
         ],
       }),
     ).rejects.toThrow(
-      "Extension point registered for plugin 'testA' may not be used by module for plugin 'testB'",
+      "Illegal dependency: Module 'test' for plugin 'testB' attempted to depend on extension point 'a' for plugin 'testA'. Extension points can only be used within their plugin's scope.",
     );
   });
 

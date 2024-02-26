@@ -24,10 +24,10 @@ import {
   stringifyEntityRef,
   UserEntity,
 } from '@backstage/catalog-model';
-import { Config } from '@backstage/config';
+import { Config, readDurationFromConfig } from '@backstage/config';
 import { InputError, NotFoundError, stringifyError } from '@backstage/errors';
 import { ScmIntegrations } from '@backstage/integration';
-import { JsonObject, JsonValue } from '@backstage/types';
+import { HumanDuration, JsonObject, JsonValue } from '@backstage/types';
 import {
   TaskSpec,
   TemplateEntityV1beta3,
@@ -48,11 +48,14 @@ import Router from 'express-promise-router';
 import { validate } from 'jsonschema';
 import { Logger } from 'winston';
 import { z } from 'zod';
-import { TemplateFilter, TemplateGlobal } from '../lib';
+import {
+  TaskBroker,
+  TemplateFilter,
+  TemplateGlobal,
+} from '@backstage/plugin-scaffolder-node';
 import {
   createBuiltinActions,
   DatabaseTaskStore,
-  TaskBroker,
   TaskWorker,
   TemplateActionRegistry,
 } from '../scaffolder';
@@ -74,6 +77,8 @@ import {
   PermissionRule,
 } from '@backstage/plugin-permission-node';
 import { scaffolderActionRules, scaffolderTemplateRules } from './rules';
+import { Duration } from 'luxon';
+import { LifecycleService } from '@backstage/backend-plugin-api';
 
 /**
  *
@@ -120,6 +125,7 @@ export interface RouterOptions {
   logger: Logger;
   config: Config;
   reader: UrlReader;
+  lifecycle?: LifecycleService;
   database: PluginDatabaseManager;
   catalogClient: CatalogApi;
   scheduler?: PluginTaskScheduler;
@@ -212,6 +218,17 @@ function buildDefaultIdentityClient(options: RouterOptions): IdentityApi {
   };
 }
 
+const readDuration = (
+  config: Config,
+  key: string,
+  defaultValue: HumanDuration,
+) => {
+  if (config.has(key)) {
+    return readDurationFromConfig(config, { key });
+  }
+  return defaultValue;
+};
+
 /**
  * A method to create a router for the scaffolder backend plugin.
  * @public
@@ -251,16 +268,26 @@ export async function createRouter(
   let taskBroker: TaskBroker;
   if (!options.taskBroker) {
     const databaseTaskStore = await DatabaseTaskStore.create({ database });
-    taskBroker = new StorageTaskBroker(databaseTaskStore, logger);
+    taskBroker = new StorageTaskBroker(databaseTaskStore, logger, config);
 
     if (scheduler && databaseTaskStore.listStaleTasks) {
       await scheduler.scheduleTask({
         id: 'close_stale_tasks',
-        frequency: { cron: '*/5 * * * *' }, // every 5 minutes, also supports Duration
+        frequency: readDuration(
+          config,
+          'scaffolder.taskTimeoutJanitorFrequency',
+          {
+            minutes: 5,
+          },
+        ),
         timeout: { minutes: 15 },
         fn: async () => {
           const { tasks } = await databaseTaskStore.listStaleTasks({
-            timeoutS: 86400,
+            timeoutS: Duration.fromObject(
+              readDuration(config, 'scaffolder.taskTimeout', {
+                hours: 24,
+              }),
+            ).as('seconds'),
           });
 
           for (const task of tasks) {
@@ -276,7 +303,7 @@ export async function createRouter(
 
   const actionRegistry = new TemplateActionRegistry();
 
-  const workers = [];
+  const workers: TaskWorker[] = [];
   if (concurrentTasksLimit !== 0) {
     for (let i = 0; i < (taskWorkers || 1); i++) {
       const worker = await TaskWorker.create({
@@ -306,7 +333,19 @@ export async function createRouter(
       });
 
   actionsToRegister.forEach(action => actionRegistry.register(action));
-  workers.forEach(worker => worker.start());
+
+  const launchWorkers = () => workers.forEach(worker => worker.start());
+
+  const shutdownWorkers = () => {
+    workers.forEach(worker => worker.stop());
+  };
+
+  if (options.lifecycle) {
+    options.lifecycle.addStartupHook(launchWorkers);
+    options.lifecycle.addShutdownHook(shutdownWorkers);
+  } else {
+    launchWorkers();
+  }
 
   const dryRunner = createDryRunner({
     actionRegistry,
@@ -437,6 +476,7 @@ export async function createRouter(
           id: step.id ?? `step-${index + 1}`,
           name: step.name ?? step.action,
         })),
+        EXPERIMENTAL_recovery: template.spec.EXPERIMENTAL_recovery,
         output: template.spec.output ?? {},
         parameters: values,
         user: {

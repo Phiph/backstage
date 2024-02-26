@@ -13,13 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { createExtensionPoint } from '@backstage/backend-plugin-api';
+import { Entity, Validators } from '@backstage/catalog-model';
 import {
-  EntityProvider,
   CatalogProcessor,
+  EntitiesSearchFilter,
+  EntityProvider,
   PlaceholderResolver,
   ScmLocationAnalyzer,
 } from '@backstage/plugin-catalog-node';
+import { PermissionRuleParams } from '@backstage/plugin-permission-common';
+import { PermissionRule } from '@backstage/plugin-permission-node';
 
 /**
  * @alpha
@@ -32,6 +37,24 @@ export interface CatalogProcessingExtensionPoint {
     ...providers: Array<EntityProvider | Array<EntityProvider>>
   ): void;
   addPlaceholderResolver(key: string, resolver: PlaceholderResolver): void;
+  setOnProcessingErrorHandler(
+    handler: (event: {
+      unprocessedEntity: Entity;
+      errors: Error[];
+    }) => Promise<void> | void,
+  ): void;
+}
+
+/** @alpha */
+export interface CatalogModelExtensionPoint {
+  /**
+   * Sets the validator function to use for one or more special fields of an
+   * entity. This is useful if the default rules for formatting of fields are
+   * not sufficient.
+   *
+   * @param validators - The (subset of) validators to set
+   */
+  setFieldValidators(validators: Partial<Validators>): void;
 }
 
 /**
@@ -55,4 +78,36 @@ export interface CatalogAnalysisExtensionPoint {
 export const catalogAnalysisExtensionPoint =
   createExtensionPoint<CatalogAnalysisExtensionPoint>({
     id: 'catalog.analysis',
+  });
+
+/** @alpha */
+export const catalogModelExtensionPoint =
+  createExtensionPoint<CatalogModelExtensionPoint>({
+    id: 'catalog.model',
+  });
+
+/**
+ * @alpha
+ */
+export type CatalogPermissionRuleInput<
+  TParams extends PermissionRuleParams = PermissionRuleParams,
+> = PermissionRule<Entity, EntitiesSearchFilter, 'catalog-entity', TParams>;
+
+/**
+ * @alpha
+ */
+export interface CatalogPermissionExtensionPoint {
+  addPermissionRules(
+    ...rules: Array<
+      CatalogPermissionRuleInput | Array<CatalogPermissionRuleInput>
+    >
+  ): void;
+}
+
+/**
+ * @alpha
+ */
+export const catalogPermissionExtensionPoint =
+  createExtensionPoint<CatalogPermissionExtensionPoint>({
+    id: 'catalog.permission',
   });

@@ -17,16 +17,13 @@
 import React from 'react';
 import { Entity } from '@backstage/catalog-model';
 import { useSites } from '../../hooks/useSites';
+import { ErrorBoundary, ResponseErrorPanel } from '@backstage/core-components';
+import { useServiceEntityAnnotations } from '../../hooks/useServiceEntityAnnotations';
+import { AZURE_WEB_SITE_NAME_ANNOTATION } from '@backstage/plugin-azure-sites-common';
 import {
-  AZURE_WEB_SITE_NAME_ANNOTATION,
-  useServiceEntityAnnotations,
-} from '../../hooks/useServiceEntityAnnotations';
-import {
-  ErrorBoundary,
+  useEntity,
   MissingAnnotationEmptyState,
-  ResponseErrorPanel,
-} from '@backstage/core-components';
-import { useEntity } from '@backstage/plugin-catalog-react';
+} from '@backstage/plugin-catalog-react';
 import { AzureSitesOverviewTable } from '../AzureSitesOverviewTableComponent/AzureSitesOverviewTable';
 
 /** @public */

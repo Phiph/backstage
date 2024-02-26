@@ -15,7 +15,7 @@
  */
 
 import { createBackendModule } from '@backstage/backend-plugin-api';
-import { eventsExtensionPoint } from '@backstage/plugin-events-node/alpha';
+import { eventsServiceRef } from '@backstage/plugin-events-node';
 import { AzureDevOpsEventRouter } from '../router/AzureDevOpsEventRouter';
 
 /**
@@ -27,17 +27,17 @@ import { AzureDevOpsEventRouter } from '../router/AzureDevOpsEventRouter';
  */
 export const eventsModuleAzureDevOpsEventRouter = createBackendModule({
   pluginId: 'events',
-  moduleId: 'azureDevOpsEventRouter',
+  moduleId: 'azure-dev-ops-event-router',
   register(env) {
     env.registerInit({
       deps: {
-        events: eventsExtensionPoint,
+        events: eventsServiceRef,
       },
       async init({ events }) {
-        const eventRouter = new AzureDevOpsEventRouter();
-
-        events.addPublishers(eventRouter);
-        events.addSubscribers(eventRouter);
+        const eventRouter = new AzureDevOpsEventRouter({
+          events,
+        });
+        await eventRouter.subscribe();
       },
     });
   },

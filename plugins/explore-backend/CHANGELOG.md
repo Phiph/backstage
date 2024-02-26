@@ -1,5 +1,212 @@
 # @backstage/plugin-explore-backend
 
+## 0.0.20
+
+### Patch Changes
+
+- fd3d51c: Add support for the new backend system.
+
+  A new backend plugin for the explore backend
+  was added and exported as `default`.
+
+  You can use it with the new backend system like
+
+  ```ts title="packages/backend/src/index.ts"
+  backend.add(import('@backstage/plugin-explore-backend'));
+  ```
+
+- 9aac2b0: Use `--cwd` as the first `yarn` argument
+- Updated dependencies
+  - @backstage/backend-common@0.21.0
+  - @backstage/plugin-search-backend-module-explore@0.1.14
+  - @backstage/backend-plugin-api@0.6.10
+  - @backstage/config@1.1.1
+  - @backstage/types@1.1.1
+  - @backstage/plugin-explore-common@0.0.2
+
+## 0.0.20-next.3
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.21.0-next.3
+  - @backstage/plugin-search-backend-module-explore@0.1.14-next.3
+  - @backstage/backend-plugin-api@0.6.10-next.3
+  - @backstage/config@1.1.1
+  - @backstage/types@1.1.1
+  - @backstage/plugin-explore-common@0.0.2
+
+## 0.0.20-next.2
+
+### Patch Changes
+
+- 9aac2b0: Use `--cwd` as the first `yarn` argument
+- Updated dependencies
+  - @backstage/backend-common@0.21.0-next.2
+  - @backstage/plugin-search-backend-module-explore@0.1.14-next.2
+  - @backstage/backend-plugin-api@0.6.10-next.2
+  - @backstage/config@1.1.1
+  - @backstage/types@1.1.1
+  - @backstage/plugin-explore-common@0.0.2
+
+## 0.0.20-next.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-plugin-api@0.6.10-next.1
+  - @backstage/backend-common@0.21.0-next.1
+  - @backstage/config@1.1.1
+  - @backstage/types@1.1.1
+  - @backstage/plugin-explore-common@0.0.2
+  - @backstage/plugin-search-backend-module-explore@0.1.14-next.1
+
+## 0.0.20-next.0
+
+### Patch Changes
+
+- fd3d51c: Add support for the new backend system.
+
+  A new backend plugin for the explore backend
+  was added and exported as `default`.
+
+  You can use it with the new backend system like
+
+  ```ts title="packages/backend/src/index.ts"
+  backend.add(import('@backstage/plugin-explore-backend'));
+  ```
+
+- Updated dependencies
+  - @backstage/backend-common@0.21.0-next.0
+  - @backstage/plugin-search-backend-module-explore@0.1.14-next.0
+  - @backstage/backend-plugin-api@0.6.10-next.0
+  - @backstage/config@1.1.1
+  - @backstage/types@1.1.1
+  - @backstage/plugin-explore-common@0.0.2
+
+## 0.0.19
+
+### Patch Changes
+
+- 4016f21: Remove some unused dependencies
+- Updated dependencies
+  - @backstage/backend-common@0.20.1
+  - @backstage/plugin-search-backend-module-explore@0.1.13
+  - @backstage/config@1.1.1
+  - @backstage/types@1.1.1
+  - @backstage/plugin-explore-common@0.0.2
+
+## 0.0.19-next.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.20.1-next.2
+  - @backstage/plugin-search-backend-module-explore@0.1.13-next.2
+
+## 0.0.19-next.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.20.1-next.1
+  - @backstage/config@1.1.1
+  - @backstage/plugin-search-backend-module-explore@0.1.13-next.1
+  - @backstage/types@1.1.1
+  - @backstage/plugin-explore-common@0.0.2
+
+## 0.0.19-next.0
+
+### Patch Changes
+
+- 4016f21: Remove some unused dependencies
+- Updated dependencies
+  - @backstage/backend-common@0.20.1-next.0
+  - @backstage/plugin-search-backend-module-explore@0.1.13-next.0
+  - @backstage/config@1.1.1
+  - @backstage/types@1.1.1
+  - @backstage/plugin-explore-common@0.0.2
+
+## 0.0.18
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.20.0
+  - @backstage/plugin-search-backend-module-explore@0.1.12
+  - @backstage/config@1.1.1
+  - @backstage/types@1.1.1
+  - @backstage/plugin-explore-common@0.0.2
+  - @backstage/plugin-search-common@1.2.9
+
+## 0.0.18-next.3
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.20.0-next.3
+  - @backstage/config@1.1.1
+  - @backstage/types@1.1.1
+  - @backstage/plugin-explore-common@0.0.2
+  - @backstage/plugin-search-backend-module-explore@0.1.12-next.3
+  - @backstage/plugin-search-common@1.2.8
+
+## 0.0.18-next.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.20.0-next.2
+  - @backstage/plugin-search-backend-module-explore@0.1.12-next.2
+  - @backstage/config@1.1.1
+  - @backstage/types@1.1.1
+  - @backstage/plugin-explore-common@0.0.2
+  - @backstage/plugin-search-common@1.2.8
+
+## 0.0.18-next.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.20.0-next.1
+  - @backstage/config@1.1.1
+  - @backstage/types@1.1.1
+  - @backstage/plugin-explore-common@0.0.2
+  - @backstage/plugin-search-backend-module-explore@0.1.12-next.1
+  - @backstage/plugin-search-common@1.2.8
+
+## 0.0.18-next.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.20.0-next.0
+  - @backstage/plugin-search-backend-module-explore@0.1.12-next.0
+  - @backstage/config@1.1.1
+  - @backstage/types@1.1.1
+  - @backstage/plugin-explore-common@0.0.2
+  - @backstage/plugin-search-common@1.2.8
+
+## 0.0.17
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.19.9
+  - @backstage/config@1.1.1
+  - @backstage/types@1.1.1
+  - @backstage/plugin-explore-common@0.0.2
+  - @backstage/plugin-search-backend-module-explore@0.1.11
+  - @backstage/plugin-search-common@1.2.8
+
+## 0.0.17-next.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.19.9-next.2
+  - @backstage/plugin-search-backend-module-explore@0.1.11-next.2
+
 ## 0.0.17-next.1
 
 ### Patch Changes

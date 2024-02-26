@@ -26,19 +26,19 @@ import Router from 'express-promise-router';
 import {
   CacheManager,
   createServiceBuilder,
+  DatabaseManager,
   getRootLogger,
+  HostDiscovery,
   loadBackendConfig,
   notFoundHandler,
-  DatabaseManager,
-  HostDiscovery,
+  ServerTokenManager,
   UrlReaders,
   useHotMemoize,
-  ServerTokenManager,
 } from '@backstage/backend-common';
 import { TaskScheduler } from '@backstage/backend-tasks';
 import { Config } from '@backstage/config';
 import healthcheck from './plugins/healthcheck';
-import { metricsInit, metricsHandler } from './metrics';
+import { metricsHandler, metricsInit } from './metrics';
 import auth from './plugins/auth';
 import azureDevOps from './plugins/azure-devops';
 import catalog from './plugins/catalog';
@@ -65,13 +65,16 @@ import lighthouse from './plugins/lighthouse';
 import linguist from './plugins/linguist';
 import devTools from './plugins/devtools';
 import nomad from './plugins/nomad';
+import signals from './plugins/signals';
 import { PluginEnvironment } from './types';
 import { ServerPermissionClient } from '@backstage/plugin-permission-node';
 import { DefaultIdentityClient } from '@backstage/plugin-auth-node';
 import { DefaultEventBroker } from '@backstage/plugin-events-backend';
+import { DefaultEventsService } from '@backstage/plugin-events-node';
 import { PrometheusExporter } from '@opentelemetry/exporter-prometheus';
 import { MeterProvider } from '@opentelemetry/sdk-metrics';
 import { metrics } from '@opentelemetry/api';
+import { DefaultSignalService } from '@backstage/plugin-signals-node';
 
 // Expose opentelemetry metrics using a Prometheus exporter on
 // http://localhost:9464/metrics . See prometheus.yml in packages/backend for
@@ -97,7 +100,14 @@ function makeCreateEnv(config: Config) {
     discovery,
   });
 
-  const eventBroker = new DefaultEventBroker(root.child({ type: 'plugin' }));
+  const eventsService = DefaultEventsService.create({ logger: root });
+  const eventBroker = new DefaultEventBroker(
+    root.child({ type: 'plugin' }),
+    eventsService,
+  );
+  const signalService = DefaultSignalService.create({
+    eventBroker,
+  });
 
   root.info(`Created UrlReader ${reader}`);
 
@@ -114,11 +124,13 @@ function makeCreateEnv(config: Config) {
       config,
       reader,
       eventBroker,
+      events: eventsService,
       discovery,
       tokenManager,
       permissions,
       scheduler,
       identity,
+      signalService,
     };
   };
 }
@@ -172,6 +184,7 @@ async function main() {
   const linguistEnv = useHotMemoize(module, () => createEnv('linguist'));
   const devToolsEnv = useHotMemoize(module, () => createEnv('devtools'));
   const nomadEnv = useHotMemoize(module, () => createEnv('nomad'));
+  const signalsEnv = useHotMemoize(module, () => createEnv('signals'));
 
   const apiRouter = Router();
   apiRouter.use('/catalog', await catalog(catalogEnv));
@@ -198,6 +211,7 @@ async function main() {
   apiRouter.use('/linguist', await linguist(linguistEnv));
   apiRouter.use('/devtools', await devTools(devToolsEnv));
   apiRouter.use('/nomad', await nomad(nomadEnv));
+  apiRouter.use('/signals', await signals(signalsEnv));
   apiRouter.use(notFoundHandler());
 
   await lighthouse(lighthouseEnv);

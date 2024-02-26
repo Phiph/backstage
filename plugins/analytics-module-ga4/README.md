@@ -12,7 +12,7 @@ This plugin contains no other functionality.
 
 ```sh
 # From your Backstage root directory
-yarn add --cwd packages/app @backstage/plugin-analytics-module-ga4
+yarn --cwd packages/app add @backstage/plugin-analytics-module-ga4
 ```
 
 2. Wire up the API implementation to your App:
@@ -87,6 +87,7 @@ Additional dimensional data can be captured using custom dimensions, like this:
    attribute names will be prefixed by `a_`.
 5. `allowedContexts` and `allowedAttributes` are optional, if not provided, no additional context and attributes will be sent.
 6. if `allowedContexts` or `allowedAttributes` is set to '\*', all context and attributes will be sent.
+7. `enableSendPageView` is used to send default events and is disabled by default.
 
 ```yaml
 app:

@@ -1,6 +1,6 @@
 ---
 id: org
-title: Microsoft Entra tenantal Data
+title: Microsoft Entra Tenant Data
 sidebar_label: Org Data
 # prettier-ignore
 description: Importing users and groups from Microsoft Entra ID into Backstage
@@ -16,7 +16,7 @@ The package is not installed by default, therefore you have to add `@backstage/p
 
 ```bash
 # From your Backstage root directory
-yarn add --cwd packages/backend @backstage/plugin-catalog-backend-module-msgraph
+yarn --cwd packages/backend add @backstage/plugin-catalog-backend-module-msgraph
 ```
 
 Next add the basic configuration to `app-config.yaml`
@@ -34,6 +34,9 @@ catalog:
             securityEnabled eq false
             and mailEnabled eq true
             and groupTypes/any(c:c+eq+'Unified')
+        schedule:
+          frequency: PT1H
+          timeout: PT50M
 ```
 
 Finally, register the plugin in `catalog.ts`.
@@ -52,11 +55,7 @@ export default async function createPlugin(
   builder.addEntityProvider(
     MicrosoftGraphOrgEntityProvider.fromConfig(env.config, {
       logger: env.logger,
-      schedule: env.scheduler.createScheduledTaskRunner({
-        frequency: { hours: 1 },
-        timeout: { minutes: 50 },
-        initialDelay: { seconds: 15 },
-      }),
+      scheduler: env.scheduler,
     }),
   );
   /* highlight-add-end */

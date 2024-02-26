@@ -18,10 +18,11 @@ import { NotAllowedError } from '@backstage/errors';
 import { AuthorizeResult } from '@backstage/plugin-permission-common';
 import { createConditionTransformer } from '@backstage/plugin-permission-node';
 import { isEntityKind } from '../permissions/rules/isEntityKind';
-import { CatalogPermissionRule } from '../permissions/rules';
+import { CatalogPermissionRule } from '../permissions';
 import { AuthorizedEntitiesCatalog } from './AuthorizedEntitiesCatalog';
-import { Cursor, EntityFilter, QueryEntitiesResponse } from '../catalog/types';
+import { Cursor, QueryEntitiesResponse } from '../catalog/types';
 import { Entity } from '@backstage/catalog-model';
+import { EntityFilter } from '@backstage/plugin-catalog-node';
 
 describe('AuthorizedEntitiesCatalog', () => {
   const fakeCatalog = {

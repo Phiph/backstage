@@ -55,7 +55,6 @@ const BootstrapInput = withStyles(
         fontSize: theme.typography.body1.fontSize,
         padding: theme.spacing(1.25, 3.25, 1.25, 1.5),
         transition: theme.transitions.create(['border-color', 'box-shadow']),
-        fontFamily: 'Helvetica Neue',
         '&:focus': {
           background: theme.palette.background.paper,
           borderRadius: theme.shape.borderRadius,
@@ -218,15 +217,20 @@ export function SelectComponent(props: SelectProps) {
           renderValue={s =>
             multiple && (value as any[]).length !== 0 ? (
               <Box className={classes.chips}>
-                {(s as string[]).map(selectedValue => (
-                  <Chip
-                    key={items.find(el => el.value === selectedValue)?.value}
-                    label={items.find(el => el.value === selectedValue)?.label}
-                    clickable
-                    onDelete={handleDelete(selectedValue)}
-                    className={classes.chip}
-                  />
-                ))}
+                {(s as string[]).map(selectedValue => {
+                  const item = items.find(el => el.value === selectedValue);
+                  return item ? (
+                    <Chip
+                      key={item?.value}
+                      label={item?.label}
+                      clickable
+                      onDelete={handleDelete(selectedValue)}
+                      className={classes.chip}
+                    />
+                  ) : (
+                    false
+                  );
+                })}
               </Box>
             ) : (
               <Typography>

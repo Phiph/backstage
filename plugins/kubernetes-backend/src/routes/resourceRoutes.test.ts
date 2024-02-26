@@ -102,12 +102,18 @@ describe('resourcesRoutes', () => {
                 },
               ],
             },
+            backend: {
+              auth: {
+                // TODO: Remove once migrated to support new auth services
+                dangerouslyDisableDefaultAuthPolicy: true,
+              },
+            },
           },
         }),
         import('@backstage/plugin-kubernetes-backend/alpha'),
         createBackendModule({
           pluginId: 'kubernetes',
-          moduleId: 'testObjectsProvider',
+          moduleId: 'test-objects-provider',
           register(env) {
             env.registerInit({
               deps: { extension: kubernetesObjectsProviderExtensionPoint },

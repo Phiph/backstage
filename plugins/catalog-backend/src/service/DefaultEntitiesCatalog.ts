@@ -31,11 +31,9 @@ import {
   EntitiesCatalog,
   EntitiesRequest,
   EntitiesResponse,
-  EntitiesSearchFilter,
   EntityAncestryResponse,
   EntityFacetsRequest,
   EntityFacetsResponse,
-  EntityFilter,
   EntityPagination,
   QueryEntitiesRequest,
   QueryEntitiesResponse,
@@ -55,6 +53,10 @@ import {
   isQueryEntitiesCursorRequest,
   isQueryEntitiesInitialRequest,
 } from './util';
+import {
+  EntitiesSearchFilter,
+  EntityFilter,
+} from '@backstage/plugin-catalog-node';
 
 const defaultSortField: EntityOrder = {
   field: 'metadata.uid',
@@ -449,7 +451,7 @@ export class DefaultEntitiesCatalog implements EntitiesCatalog {
     countQuery.count('search.entity_id', { as: 'count' });
 
     const [rows, [{ count }]] = await Promise.all([
-      dbQuery,
+      limit > 0 ? dbQuery : [],
       // for performance reasons we invoke the countQuery
       // only on the first request.
       // The result is then embedded into the cursor

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { HumanDuration } from '@backstage/types';
+
 export interface Config {
   /** Configuration options for the scaffolder plugin */
   scaffolder?: {
@@ -37,5 +39,37 @@ export interface Config {
      * Set to 0 to disable task workers altogether.
      */
     concurrentTasksLimit?: number;
+
+    /**
+     * Sets the tasks recoverability on system start up.
+     *
+     * If not specified, the default value is false.
+     */
+    EXPERIMENTAL_recoverTasks?: boolean;
+
+    /**
+     * Every task which is in progress state and having a last heartbeat longer than a specified timeout is going to
+     * be attempted to recover.
+     *
+     * If not specified, the default value is 5 seconds.
+     *
+     */
+    EXPERIMENTAL_recoverTasksTimeout?: HumanDuration;
+
+    /**
+     * Makes sure to auto-expire and clean up things that time out or for other reasons should not be left lingering.
+     *
+     * By default, the frequency is every 5 minutes.
+     */
+    taskTimeoutJanitorFrequency?: HumanDuration;
+
+    /**
+     * Sets the task's heartbeat timeout, when to consider a task to be staled.
+     *
+     * Once task is considered to be staled, the scheduler will shut it down on the next cycle.
+     *
+     * Default value is 24 hours.
+     */
+    taskTimeout?: HumanDuration;
   };
 }

@@ -1,8 +1,8 @@
 # codescene
 
-[CodeScene](https://codescene.com/) is a multi-purpose tool bridging code, business and people. See hidden risks and social patterns in your code. Prioritize and reduce technical debt.
+[CodeScene](https://codescene.com/) is a multi-purpose tool that connects code, businesses, and people. Discover hidden hazards and social trends in your code. Prioritise and minimise technical debt.
 
-The CodeScene Backstage Plugin exposes a page component that will list the existing projects and their analysis data on your CodeScene instance.
+The CodeScene Backstage Plugin provides a page component that displays a list of existing projects and associated analysis data on your CodeScene instance.
 
 ![screenshot](./docs/codescene-plugin-screenshot.png)
 
@@ -12,7 +12,7 @@ The CodeScene Backstage Plugin exposes a page component that will list the exist
 
 ```bash
 # From your Backstage root directory
-yarn add --cwd packages/app @backstage/plugin-codescene
+yarn --cwd packages/app add @backstage/plugin-codescene
 ```
 
 2. Add the routes and pages to your `App.tsx`:

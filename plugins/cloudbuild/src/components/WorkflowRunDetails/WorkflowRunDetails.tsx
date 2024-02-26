@@ -25,7 +25,6 @@ import {
   TableCell,
   TableContainer,
   TableRow,
-  Theme,
   Typography,
 } from '@material-ui/core';
 import ExternalLinkIcon from '@material-ui/icons/Launch';
@@ -35,8 +34,9 @@ import { useProjectName } from '../useProjectName';
 import { WorkflowRunStatus } from '../WorkflowRunStatus';
 import { useWorkflowRunsDetails } from './useWorkflowRunsDetails';
 import { Breadcrumbs, Link, WarningPanel } from '@backstage/core-components';
+import { getLocation } from '../useLocation';
 
-const useStyles = makeStyles<Theme>(theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
     maxWidth: 720,
     margin: theme.spacing(2),
@@ -64,8 +64,9 @@ const useStyles = makeStyles<Theme>(theme => ({
 export const WorkflowRunDetails = (props: { entity: Entity }) => {
   const { value: projectName, loading, error } = useProjectName(props.entity);
   const [projectId] = (projectName ?? '/').split('/');
+  const location = getLocation(props.entity);
 
-  const details = useWorkflowRunsDetails(projectId);
+  const details = useWorkflowRunsDetails(projectId, location);
 
   const classes = useStyles();
   if (error) {
@@ -97,9 +98,9 @@ export const WorkflowRunDetails = (props: { entity: Entity }) => {
           <TableBody>
             <TableRow>
               <TableCell>
-                <Typography noWrap>Branch</Typography>
+                <Typography noWrap>Ref</Typography>
               </TableCell>
-              <TableCell>{details.value?.substitutions.BRANCH_NAME}</TableCell>
+              <TableCell>{details.value?.substitutions.REF_NAME}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>

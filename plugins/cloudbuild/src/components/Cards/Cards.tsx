@@ -19,9 +19,11 @@ import { useWorkflowRuns, WorkflowRun } from '../useWorkflowRuns';
 import { WorkflowRunsTable } from '../WorkflowRunsTable';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { WorkflowRunStatus } from '../WorkflowRunStatus';
-import { Theme, makeStyles, LinearProgress } from '@material-ui/core';
+import { makeStyles, LinearProgress } from '@material-ui/core';
 import ExternalLinkIcon from '@material-ui/icons/Launch';
 import { CLOUDBUILD_ANNOTATION } from '../useProjectName';
+import { getLocation } from '../useLocation';
+import { getCloudbuildFilter } from '../useCloudBuildFilter';
 
 import {
   InfoCard,
@@ -31,7 +33,7 @@ import {
 } from '@backstage/core-components';
 import { errorApiRef, useApi } from '@backstage/core-plugin-api';
 
-const useStyles = makeStyles<Theme>({
+const useStyles = makeStyles({
   externalLinkIcon: {
     fontSize: 'inherit',
     verticalAlign: 'bottom',
@@ -79,9 +81,13 @@ export const LatestWorkflowRunCard = (props: { branch: string }) => {
   const { entity } = useEntity();
   const errorApi = useApi(errorApiRef);
   const projectId = entity?.metadata.annotations?.[CLOUDBUILD_ANNOTATION] || '';
+  const location = getLocation(entity);
+  const cloudBuildFilter = getCloudbuildFilter(entity);
 
   const [{ runs, loading, error }] = useWorkflowRuns({
     projectId,
+    location,
+    cloudBuildFilter,
   });
   const lastRun = runs?.[0] ?? ({} as WorkflowRun);
   useEffect(() => {

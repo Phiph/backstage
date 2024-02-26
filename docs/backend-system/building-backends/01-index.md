@@ -6,8 +6,6 @@ sidebar_label: Overview
 description: Building backends using the new backend system
 ---
 
-> **NOTE: The new backend system is in alpha, and some plugins do not yet fully implement it.**
-
 > NOTE: If you have an existing backend that is not yet using the new backend
 > system, see [migrating](./08-migrating.md).
 
@@ -103,8 +101,6 @@ This example touches on the fact that services can have different scopes, being 
 
 ## Split Into Multiple Backends
 
-> NOTE: Splitting into multiple backends is an advanced deployment pattern that requires significant effort and there are not yet many built-in tools in the framework to help you out. Only use this if necessary.
-
 A more advanced way to deploy Backstage is to split the backend plugins into multiple different backend deployments. Both the [deployment documentation](../../deployment/scaling.md) and [Threat Model](../../overview/threat-model.md#trust-model) explain the benefits of this, so here we'll focus on how to do it.
 
 To create a separate backend we need to create an additional backend package. This package will be built and deployed separately from your existing backend. There is currently no template to create a backend via `yarn new`, so the quickest way is to copy the new package and modify. The naming is up to you and it depends on how you are splitting things and up. For this example we'll just use a simple suffix. You might end up with a directory structure like this:
@@ -144,3 +140,13 @@ backend.start();
 ```
 
 We've now split the backend into two separate deployments, but we still need to make sure that they can communicate with each other. This is the hard and somewhat tedious part, as Backstage currently doesn't provide an out of the box solution that solves this. You'll need to manually configure the two backends with custom implementations of the `DiscoveryService` and have them return the correct URLs for each other. Likewise, you'll also need to provide a custom implementation of the `DiscoveryApi` in the frontend, unless you surface the two backends via a proxy that handles the routing instead.
+
+### Split backend deployments architecture example
+
+Below is an example of a more elaborate setup where we have three different backend deployments, each with their own set of plugins and modules. Between our frontend app and the backend instances we have a reverse proxy that routes the traffic to the appropriate instance. As an option for securing the Backstage deployment the proxy can be set up as an authenticating reverse proxy as well, denying unauthenticated users access to the backend instances.
+
+![diagram of a backstage deployment with three separate horizontally scaled backend systems](../../assets/backend-system/scaled-deployments.drawio.svg)
+
+In this example we have split out the Catalog and Search plugins into one backend deployment. The proxy routes all traffic for `/api/catalog/` and `/api/search/` to this instance. With this separation we're able to scale and deploy these two plugins independently, and they are also isolated from both a performance and security perspective. Likewise the TechDocs and Scaffolder plugins are split out as well, and then we route the rest of the traffic to our instance that contains the App, Auth, and Proxy plugins.
+
+We also see how each of the plugins have their own logical database, but are often set up to share the actual Database Management System (DBMS) instance. This is of course not a requirement, and you can choose to further divide or consolidate the databases as you see fit.

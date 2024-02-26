@@ -1,5 +1,92 @@
 # @backstage/config-loader
 
+## 1.6.2
+
+### Patch Changes
+
+- 0a9a03c: Make schema processing gracefully handle an empty config.
+- 6bb6f3e: Updated dependency `fs-extra` to `^11.2.0`.
+  Updated dependency `@types/fs-extra` to `^11.0.0`.
+- bf3da16: Updated dependency `typescript-json-schema` to `^0.63.0`.
+- Updated dependencies
+  - @backstage/cli-common@0.1.13
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/types@1.1.1
+
+## 1.6.2-next.0
+
+### Patch Changes
+
+- 0a9a03c: Make schema processing gracefully handle an empty config.
+- Updated dependencies
+  - @backstage/cli-common@0.1.13
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/types@1.1.1
+
+## 1.6.1
+
+### Patch Changes
+
+- 7acbb5a: Removed `mock-fs` dev dependency.
+- Updated dependencies
+  - @backstage/cli-common@0.1.13
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/types@1.1.1
+
+## 1.6.1-next.0
+
+### Patch Changes
+
+- 7acbb5a: Removed `mock-fs` dev dependency.
+- Updated dependencies
+  - @backstage/config@1.1.1
+  - @backstage/cli-common@0.1.13
+  - @backstage/errors@1.2.3
+  - @backstage/types@1.1.1
+
+## 1.6.0
+
+### Minor Changes
+
+- 24f5a85: Add "path" to `TransformFunc` context
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/cli-common@0.1.13
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/types@1.1.1
+
+## 1.6.0-next.0
+
+### Minor Changes
+
+- 24f5a85: Add "path" to `TransformFunc` context
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/cli-common@0.1.13
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/types@1.1.1
+
+## 1.5.3
+
+### Patch Changes
+
+- 22ca64f117: Correctly resolve config targets into absolute paths
+- 087bab5b42: Updated dependency `typescript-json-schema` to `^0.62.0`.
+- Updated dependencies
+  - @backstage/cli-common@0.1.13
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+  - @backstage/types@1.1.1
+
 ## 1.5.2-next.0
 
 ### Patch Changes

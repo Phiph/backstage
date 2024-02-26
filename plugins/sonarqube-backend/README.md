@@ -12,7 +12,7 @@ In your `packages/backend/src/index.ts` make the following changes:
   import { createBackend } from '@backstage/backend-defaults';
   const backend = createBackend();
   // ... other feature additions
-+ backend.add(import('@backstage/plugin-sonarqube-backend');
++ backend.add(import('@backstage/plugin-sonarqube-backend'));
   backend.start();
 ```
 
@@ -22,7 +22,7 @@ This plugin needs to be added to an existing backstage instance.
 
 ```bash
 # From your Backstage root directory
-yarn add --cwd packages/backend @backstage/plugin-sonarqube-backend
+yarn --cwd packages/backend add @backstage/plugin-sonarqube-backend
 ```
 
 Typically, this means creating a `src/plugins/sonarqube.ts` file and adding a reference to it to `src/index.ts` in the backend package.

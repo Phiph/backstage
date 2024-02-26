@@ -1,5 +1,52 @@
 # @backstage/theme
 
+## 0.5.1
+
+### Patch Changes
+
+- dd5d7cc: Fixed missing extra variables like `applyDarkStyles` in Mui V5 theme after calling `createUnifiedThemeFromV4` function
+- 8fe56a8: Widen `@types/react` dependency range to include version 18.
+
+## 0.5.1-next.1
+
+### Patch Changes
+
+- dd5d7cc: Fixed missing extra variables like `applyDarkStyles` in Mui V5 theme after calling `createUnifiedThemeFromV4` function
+
+## 0.5.1-next.0
+
+### Patch Changes
+
+- 8fe56a8: Widen `@types/react` dependency range to include version 18.
+
+## 0.5.0
+
+### Minor Changes
+
+- 4d9e3b3: Added a global `OverrideComponentNameToClassKeys` for other plugins and packages to populate using module augmentation. This will in turn will provide component style override types for `createUnifiedTheme`.
+
+### Patch Changes
+
+- cd0dd4c: Align Material UI v5 `Paper` component background color in dark mode to v4.
+
+## 0.5.0-next.1
+
+### Patch Changes
+
+- cd0dd4c: Align Material UI v5 `Paper` component background color in dark mode to v4.
+
+## 0.5.0-next.0
+
+### Minor Changes
+
+- 4d9e3b39e4: Added a global `OverrideComponentNameToClassKeys` for other plugins and packages to populate using module augmentation. This will in turn will provide component style override types for `createUnifiedTheme`.
+
+## 0.4.4
+
+### Patch Changes
+
+- 6c2b872153: Add official support for React 18.
+
 ## 0.4.4-next.0
 
 ### Patch Changes

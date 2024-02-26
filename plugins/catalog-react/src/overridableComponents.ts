@@ -26,6 +26,7 @@ import {
   CatalogReactEntityOwnerPickerClassKey,
   CatalogReactEntityProcessingStatusPickerClassKey,
 } from './components';
+import { CatalogReactEntityAutocompletePickerClassKey } from './components/EntityAutocompletePicker/EntityAutocompletePicker';
 
 /** @public */
 export type CatalogReactComponentsNameToClassKey = {
@@ -36,6 +37,7 @@ export type CatalogReactComponentsNameToClassKey = {
   CatalogReactEntityTagPicker: CatalogReactEntityTagPickerClassKey;
   CatalogReactEntityOwnerPicker: CatalogReactEntityOwnerPickerClassKey;
   CatalogReactEntityProcessingStatusPicker: CatalogReactEntityProcessingStatusPickerClassKey;
+  CatalogReactEntityAutocompletePickerClassKey: CatalogReactEntityAutocompletePickerClassKey;
 };
 
 /** @public */
@@ -44,3 +46,8 @@ export type BackstageOverrides = Overrides & {
     StyleRules<CatalogReactComponentsNameToClassKey[Name]>
   >;
 };
+
+declare module '@backstage/theme' {
+  interface OverrideComponentNameToClassKeys
+    extends CatalogReactComponentsNameToClassKey {}
+}

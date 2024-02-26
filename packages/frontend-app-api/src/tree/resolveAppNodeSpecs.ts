@@ -18,31 +18,44 @@ import {
   BackstagePlugin,
   Extension,
   ExtensionOverrides,
+  FrontendFeature,
 } from '@backstage/frontend-plugin-api';
 // eslint-disable-next-line @backstage/no-relative-monorepo-imports
 import { toInternalExtensionOverrides } from '../../../frontend-plugin-api/src/wiring/createExtensionOverrides';
 import { ExtensionParameters } from './readAppExtensionsConfig';
-import { AppNodeSpec } from './types';
+import { AppNodeSpec } from '@backstage/frontend-plugin-api';
+// eslint-disable-next-line @backstage/no-relative-monorepo-imports
+import { toInternalBackstagePlugin } from '../../../frontend-plugin-api/src/wiring/createPlugin';
+// eslint-disable-next-line @backstage/no-relative-monorepo-imports
+import { toInternalExtension } from '../../../frontend-plugin-api/src/wiring/resolveExtensionDefinition';
 
 /** @internal */
 export function resolveAppNodeSpecs(options: {
-  features: (BackstagePlugin | ExtensionOverrides)[];
-  builtinExtensions: Extension<unknown>[];
-  parameters: Array<ExtensionParameters>;
+  features?: FrontendFeature[];
+  builtinExtensions?: Extension<unknown>[];
+  parameters?: Array<ExtensionParameters>;
   forbidden?: Set<string>;
 }): AppNodeSpec[] {
-  const { builtinExtensions, parameters, forbidden = new Set() } = options;
+  const {
+    builtinExtensions = [],
+    parameters = [],
+    forbidden = new Set(),
+    features = [],
+  } = options;
 
-  const plugins = options.features.filter(
+  const plugins = features.filter(
     (f): f is BackstagePlugin => f.$$type === '@backstage/BackstagePlugin',
   );
-  const overrides = options.features.filter(
+  const overrides = features.filter(
     (f): f is ExtensionOverrides =>
       f.$$type === '@backstage/ExtensionOverrides',
   );
 
   const pluginExtensions = plugins.flatMap(source => {
-    return source.extensions.map(extension => ({ ...extension, source }));
+    return toInternalBackstagePlugin(source).extensions.map(extension => ({
+      ...extension,
+      source,
+    }));
   });
   const overrideExtensions = overrides.flatMap(
     override => toInternalExtensionOverrides(override).extensions,
@@ -83,45 +96,53 @@ export function resolveAppNodeSpecs(options: {
   }
 
   const configuredExtensions = [
-    ...pluginExtensions.map(({ source, ...extension }) => ({
-      extension,
-      params: {
-        source,
-        attachTo: extension.attachTo,
-        disabled: extension.disabled,
-        config: undefined as unknown,
-      },
-    })),
-    ...builtinExtensions.map(extension => ({
-      extension,
-      params: {
-        source: undefined,
-        attachTo: extension.attachTo,
-        disabled: extension.disabled,
-        config: undefined as unknown,
-      },
-    })),
+    ...pluginExtensions.map(({ source, ...extension }) => {
+      const internalExtension = toInternalExtension(extension);
+      return {
+        extension: internalExtension,
+        params: {
+          source,
+          attachTo: internalExtension.attachTo,
+          disabled: internalExtension.disabled,
+          config: undefined as unknown,
+        },
+      };
+    }),
+    ...builtinExtensions.map(extension => {
+      const internalExtension = toInternalExtension(extension);
+      return {
+        extension: internalExtension,
+        params: {
+          source: undefined,
+          attachTo: internalExtension.attachTo,
+          disabled: internalExtension.disabled,
+          config: undefined as unknown,
+        },
+      };
+    }),
   ];
 
   // Install all extension overrides
   for (const extension of overrideExtensions) {
+    const internalExtension = toInternalExtension(extension);
+
     // Check if our override is overriding an extension that already exists
     const index = configuredExtensions.findIndex(
       e => e.extension.id === extension.id,
     );
     if (index !== -1) {
       // Only implementation, attachment point and default disabled status are overridden, the source is kept
-      configuredExtensions[index].extension = extension;
-      configuredExtensions[index].params.attachTo = extension.attachTo;
-      configuredExtensions[index].params.disabled = extension.disabled;
+      configuredExtensions[index].extension = internalExtension;
+      configuredExtensions[index].params.attachTo = internalExtension.attachTo;
+      configuredExtensions[index].params.disabled = internalExtension.disabled;
     } else {
       // Add the extension as a new one when not overriding an existing one
       configuredExtensions.push({
-        extension,
+        extension: internalExtension,
         params: {
           source: undefined,
-          attachTo: extension.attachTo,
-          disabled: extension.disabled,
+          attachTo: internalExtension.attachTo,
+          disabled: internalExtension.disabled,
           config: undefined,
         },
       });

@@ -1,5 +1,239 @@
 # @backstage/plugin-azure-devops-backend
 
+## 0.5.2
+
+### Patch Changes
+
+- 353244d: Added a note about Service Principles
+- b64ce5a: Updated New Backend System instructions to use default import
+- 25bda45: Fixed bug with `extractPartsFromAsset` that resulted in a leading `.` being removed from the path in an otherwise valid path (ex. `.assets/image.png`). The leading `.` will now only be moved for paths beginning with `./`.
+- 9aac2b0: Use `--cwd` as the first `yarn` argument
+- Updated dependencies
+  - @backstage/backend-common@0.21.0
+  - @backstage/backend-plugin-api@0.6.10
+  - @backstage/catalog-model@1.4.4
+  - @backstage/integration@1.9.0
+  - @backstage/plugin-catalog-node@1.7.0
+  - @backstage/config@1.1.1
+  - @backstage/plugin-azure-devops-common@0.3.2
+  - @backstage/plugin-catalog-common@1.0.21
+
+## 0.5.2-next.3
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.21.0-next.3
+  - @backstage/integration@1.9.0-next.1
+  - @backstage/plugin-catalog-node@1.6.2-next.3
+  - @backstage/backend-plugin-api@0.6.10-next.3
+  - @backstage/catalog-model@1.4.4-next.0
+  - @backstage/config@1.1.1
+  - @backstage/plugin-azure-devops-common@0.3.2
+  - @backstage/plugin-catalog-common@1.0.21-next.0
+
+## 0.5.2-next.2
+
+### Patch Changes
+
+- 9aac2b0: Use `--cwd` as the first `yarn` argument
+- Updated dependencies
+  - @backstage/backend-common@0.21.0-next.2
+  - @backstage/backend-plugin-api@0.6.10-next.2
+  - @backstage/plugin-catalog-node@1.6.2-next.2
+  - @backstage/config@1.1.1
+  - @backstage/catalog-model@1.4.4-next.0
+  - @backstage/integration@1.9.0-next.0
+  - @backstage/plugin-azure-devops-common@0.3.2
+  - @backstage/plugin-catalog-common@1.0.21-next.0
+
+## 0.5.2-next.1
+
+### Patch Changes
+
+- 25bda45: Fixed bug with `extractPartsFromAsset` that resulted in a leading `.` being removed from the path in an otherwise valid path (ex. `.assets/image.png`). The leading `.` will now only be moved for paths beginning with `./`.
+- Updated dependencies
+  - @backstage/catalog-model@1.4.4-next.0
+  - @backstage/backend-plugin-api@0.6.10-next.1
+  - @backstage/backend-common@0.21.0-next.1
+  - @backstage/integration@1.9.0-next.0
+  - @backstage/config@1.1.1
+  - @backstage/plugin-azure-devops-common@0.3.2
+  - @backstage/plugin-catalog-common@1.0.21-next.0
+  - @backstage/plugin-catalog-node@1.6.2-next.1
+
+## 0.5.2-next.0
+
+### Patch Changes
+
+- 353244d: Added a note about Service Principles
+- Updated dependencies
+  - @backstage/backend-common@0.21.0-next.0
+  - @backstage/plugin-catalog-node@1.6.2-next.0
+  - @backstage/backend-plugin-api@0.6.10-next.0
+  - @backstage/catalog-model@1.4.3
+  - @backstage/config@1.1.1
+  - @backstage/integration@1.8.0
+  - @backstage/plugin-azure-devops-common@0.3.2
+  - @backstage/plugin-catalog-common@1.0.20
+
+## 0.5.1
+
+### Patch Changes
+
+- d076ee4: Updated dependency `azure-devops-node-api` to `^12.0.0`.
+- 4016f21: Remove some unused dependencies
+- Updated dependencies
+  - @backstage/backend-common@0.20.1
+  - @backstage/backend-plugin-api@0.6.9
+  - @backstage/plugin-catalog-node@1.6.1
+  - @backstage/catalog-model@1.4.3
+  - @backstage/config@1.1.1
+  - @backstage/integration@1.8.0
+  - @backstage/plugin-azure-devops-common@0.3.2
+  - @backstage/plugin-catalog-common@1.0.20
+
+## 0.5.1-next.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-plugin-api@0.6.9-next.2
+  - @backstage/backend-common@0.20.1-next.2
+  - @backstage/plugin-catalog-node@1.6.1-next.2
+
+## 0.5.1-next.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.20.1-next.1
+  - @backstage/integration@1.8.0
+  - @backstage/config@1.1.1
+  - @backstage/backend-plugin-api@0.6.9-next.1
+  - @backstage/catalog-model@1.4.3
+  - @backstage/plugin-azure-devops-common@0.3.2
+  - @backstage/plugin-catalog-common@1.0.19
+  - @backstage/plugin-catalog-node@1.6.1-next.1
+
+## 0.5.1-next.0
+
+### Patch Changes
+
+- d076ee4: Updated dependency `azure-devops-node-api` to `^12.0.0`.
+- 4016f21: Remove some unused dependencies
+- Updated dependencies
+  - @backstage/backend-common@0.20.1-next.0
+  - @backstage/plugin-catalog-node@1.6.1-next.0
+  - @backstage/backend-plugin-api@0.6.9-next.0
+  - @backstage/catalog-model@1.4.3
+  - @backstage/config@1.1.1
+  - @backstage/integration@1.8.0
+  - @backstage/plugin-azure-devops-common@0.3.2
+  - @backstage/plugin-catalog-common@1.0.19
+
+## 0.5.0
+
+### Minor Changes
+
+- 844969c: **BREAKING** New `fromConfig` static method must be used now when creating an instance of the `AzureDevOpsApi`
+
+  Added support for using the `AzureDevOpsCredentialsProvider`
+
+### Patch Changes
+
+- c70e4f5: Added multi-org support
+- 646db72: Updated encoding of Org to use `encodeURIComponent` when building URL used to get credentials from credential provider
+- 043b724: Introduced new `AzureDevOpsAnnotatorProcessor` that adds the needed annotations automatically. Also, moved constants to common package so they can be shared more easily
+- Updated dependencies
+  - @backstage/backend-common@0.20.0
+  - @backstage/plugin-catalog-node@1.6.0
+  - @backstage/plugin-azure-devops-common@0.3.2
+  - @backstage/integration@1.8.0
+  - @backstage/backend-plugin-api@0.6.8
+  - @backstage/catalog-model@1.4.3
+  - @backstage/config@1.1.1
+  - @backstage/plugin-catalog-common@1.0.19
+
+## 0.5.0-next.3
+
+### Patch Changes
+
+- c70e4f5: Added multi-org support
+- 646db72: Updated encoding of Org to use `encodeURIComponent` when building URL used to get credentials from credential provider
+- Updated dependencies
+  - @backstage/plugin-azure-devops-common@0.3.2-next.1
+  - @backstage/backend-common@0.20.0-next.3
+  - @backstage/backend-plugin-api@0.6.8-next.3
+  - @backstage/catalog-model@1.4.3
+  - @backstage/config@1.1.1
+  - @backstage/integration@1.8.0-next.1
+  - @backstage/plugin-catalog-common@1.0.18
+  - @backstage/plugin-catalog-node@1.6.0-next.3
+
+## 0.5.0-next.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/plugin-catalog-node@1.6.0-next.2
+  - @backstage/backend-common@0.20.0-next.2
+  - @backstage/backend-plugin-api@0.6.8-next.2
+  - @backstage/catalog-model@1.4.3
+  - @backstage/config@1.1.1
+  - @backstage/integration@1.8.0-next.1
+  - @backstage/plugin-azure-devops-common@0.3.2-next.0
+  - @backstage/plugin-catalog-common@1.0.18
+
+## 0.5.0-next.1
+
+### Minor Changes
+
+- 844969cd97: **BREAKING** New `fromConfig` static method must be used now when creating an instance of the `AzureDevOpsApi`
+
+  Added support for using the `AzureDevOpsCredentialsProvider`
+
+### Patch Changes
+
+- 043b724c56: Introduced new `AzureDevOpsAnnotatorProcessor` that adds the needed annotations automatically. Also, moved constants to common package so they can be shared more easily
+- Updated dependencies
+  - @backstage/plugin-azure-devops-common@0.3.2-next.0
+  - @backstage/integration@1.8.0-next.1
+  - @backstage/backend-common@0.20.0-next.1
+  - @backstage/backend-plugin-api@0.6.8-next.1
+  - @backstage/catalog-model@1.4.3
+  - @backstage/config@1.1.1
+  - @backstage/plugin-catalog-common@1.0.18
+  - @backstage/plugin-catalog-node@1.5.1-next.1
+
+## 0.4.5-next.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.20.0-next.0
+  - @backstage/backend-plugin-api@0.6.8-next.0
+  - @backstage/config@1.1.1
+  - @backstage/plugin-azure-devops-common@0.3.1
+
+## 0.4.4
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-common@0.19.9
+  - @backstage/backend-plugin-api@0.6.7
+  - @backstage/config@1.1.1
+  - @backstage/plugin-azure-devops-common@0.3.1
+
+## 0.4.4-next.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/backend-plugin-api@0.6.7-next.2
+  - @backstage/backend-common@0.19.9-next.2
+
 ## 0.4.4-next.1
 
 ### Patch Changes

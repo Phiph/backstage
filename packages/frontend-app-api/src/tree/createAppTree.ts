@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-import {
-  BackstagePlugin,
-  Extension,
-  ExtensionOverrides,
-} from '@backstage/frontend-plugin-api';
+import { Extension, FrontendFeature } from '@backstage/frontend-plugin-api';
 import { readAppExtensionsConfig } from './readAppExtensionsConfig';
 import { resolveAppTree } from './resolveAppTree';
 import { resolveAppNodeSpecs } from './resolveAppNodeSpecs';
-import { AppTree } from './types';
+import { AppTree } from '@backstage/frontend-plugin-api';
 import { Config } from '@backstage/config';
 import { instantiateAppNodeTree } from './instantiateAppNodeTree';
 
 /** @internal */
 export interface CreateAppTreeOptions {
-  features: (BackstagePlugin | ExtensionOverrides)[];
+  features: FrontendFeature[];
   builtinExtensions: Extension<unknown>[];
   config: Config;
 }
@@ -36,12 +32,12 @@ export interface CreateAppTreeOptions {
 /** @internal */
 export function createAppTree(options: CreateAppTreeOptions): AppTree {
   const tree = resolveAppTree(
-    'core',
+    'app',
     resolveAppNodeSpecs({
       features: options.features,
       builtinExtensions: options.builtinExtensions,
       parameters: readAppExtensionsConfig(options.config),
-      forbidden: new Set(['core']),
+      forbidden: new Set(['app']),
     }),
   );
   instantiateAppNodeTree(tree.root);

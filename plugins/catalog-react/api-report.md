@@ -22,7 +22,7 @@ import { PropsWithChildren } from 'react';
 import { default as React_2 } from 'react';
 import { ReactNode } from 'react';
 import { RouteRef } from '@backstage/core-plugin-api';
-import { ScmIntegrationRegistry } from '@backstage/integration';
+import { scmIntegrationsApiRef } from '@backstage/integration-react';
 import { StyleRules } from '@material-ui/core/styles/withStyles';
 import { SystemEntity } from '@backstage/catalog-model';
 import { TableColumn } from '@backstage/core-components';
@@ -93,7 +93,11 @@ export type CatalogReactComponentsNameToClassKey = {
   CatalogReactEntityTagPicker: CatalogReactEntityTagPickerClassKey;
   CatalogReactEntityOwnerPicker: CatalogReactEntityOwnerPickerClassKey;
   CatalogReactEntityProcessingStatusPicker: CatalogReactEntityProcessingStatusPickerClassKey;
+  CatalogReactEntityAutocompletePickerClassKey: CatalogReactEntityAutocompletePickerClassKey;
 };
+
+// @public (undocumented)
+export type CatalogReactEntityAutocompletePickerClassKey = 'root' | 'label';
 
 // @public
 export type CatalogReactEntityDisplayNameClassKey = 'root' | 'icon';
@@ -105,10 +109,13 @@ export type CatalogReactEntityLifecyclePickerClassKey = 'input';
 export type CatalogReactEntityNamespacePickerClassKey = 'input';
 
 // @public (undocumented)
-export type CatalogReactEntityOwnerPickerClassKey = 'input';
+export type CatalogReactEntityOwnerPickerClassKey = 'input' | 'root' | 'label';
 
 // @public (undocumented)
-export type CatalogReactEntityProcessingStatusPickerClassKey = 'input';
+export type CatalogReactEntityProcessingStatusPickerClassKey =
+  | 'input'
+  | 'root'
+  | 'label';
 
 // @public (undocumented)
 export type CatalogReactEntitySearchBarClassKey = 'searchToolbar' | 'input';
@@ -196,8 +203,8 @@ export const EntityDisplayName: (props: EntityDisplayNameProps) => JSX.Element;
 // @public
 export type EntityDisplayNameProps = {
   entityRef: Entity | CompoundEntityRef | string;
-  noIcon?: boolean;
-  noTooltip?: boolean;
+  hideIcon?: boolean;
+  disableTooltip?: boolean;
   defaultKind?: string;
   defaultNamespace?: string;
 };
@@ -284,12 +291,25 @@ export type EntityListContextProps<
   queryParameters: Partial<Record<keyof EntityFilters, string | string[]>>;
   loading: boolean;
   error?: Error;
+  pageInfo?: {
+    next?: () => void;
+    prev?: () => void;
+  };
 };
 
 // @public
 export const EntityListProvider: <EntityFilters extends DefaultEntityFilters>(
-  props: PropsWithChildren<{}>,
+  props: EntityListProviderProps,
 ) => React_2.JSX.Element;
+
+// @public (undocumented)
+export type EntityListProviderProps = PropsWithChildren<{
+  pagination?:
+    | boolean
+    | {
+        limit?: number;
+      };
+}>;
 
 // @public (undocumented)
 export type EntityLoadingStatus<TEntity extends Entity = Entity> = {
@@ -399,6 +419,7 @@ export type EntityRefLinkProps = {
   defaultNamespace?: string;
   title?: string;
   children?: React_2.ReactNode;
+  hideIcon?: boolean;
 } & Omit<LinkProps, 'to'>;
 
 // @public
@@ -412,6 +433,7 @@ export type EntityRefLinksProps<
 > = {
   defaultKind?: string;
   entityRefs: TRef[];
+  hideIcons?: boolean;
   fetchEntities?: boolean;
   getTitle?(entity: TRef): string | undefined;
 } & Omit<LinkProps, 'to'>;
@@ -526,6 +548,11 @@ export class EntityTextFilter implements EntityFilter {
   // (undocumented)
   filterEntity(entity: Entity): boolean;
   // (undocumented)
+  getFullTextFilters(): {
+    term: string;
+    fields: string[];
+  };
+  // (undocumented)
   readonly value: string;
 }
 
@@ -597,7 +624,7 @@ export function getEntityRelations(
 // @public (undocumented)
 export function getEntitySourceLocation(
   entity: Entity,
-  scmIntegrationsApi: ScmIntegrationRegistry,
+  scmIntegrationsApi: typeof scmIntegrationsApiRef.T,
 ): EntitySourceLocation | undefined;
 
 // @public (undocumented)
@@ -615,6 +642,15 @@ export function InspectEntityDialog(props: {
   entity: Entity;
   onClose: () => void;
 }): React_2.JSX.Element | null;
+
+// @public
+export function MissingAnnotationEmptyState(props: {
+  annotation: string | string[];
+  readMoreUrl?: string;
+}): React_2.JSX.Element;
+
+// @public (undocumented)
+export type MissingAnnotationEmptyStateClassKey = 'code';
 
 // @public (undocumented)
 export function MockEntityListContextProvider<

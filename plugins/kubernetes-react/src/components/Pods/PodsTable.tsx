@@ -80,7 +80,6 @@ const READY: TableColumn<Pod>[] = [
 ];
 
 const PodDrawerTrigger = ({ pod }: { pod: Pod }) => {
-  const cluster = useContext(ClusterContext);
   const errors = useMatchingErrors({
     kind: 'Pod',
     apiVersion: 'v1',
@@ -90,7 +89,7 @@ const PodDrawerTrigger = ({ pod }: { pod: Pod }) => {
     <PodDrawer
       podAndErrors={{
         pod: pod as any,
-        clusterName: cluster.name,
+        cluster: useContext(ClusterContext),
         errors: errors,
       }}
     />
@@ -125,6 +124,11 @@ const Memory = ({ clusterName, pod }: { clusterName: string; pod: Pod }) => {
 export const PodsTable = ({ pods, extraColumns = [] }: PodsTablesProps) => {
   const cluster = useContext(ClusterContext);
   const defaultColumns: TableColumn<Pod>[] = [
+    {
+      title: 'ID',
+      field: 'metadata.uid',
+      hidden: true,
+    },
     {
       title: 'name',
       highlight: true,
@@ -176,7 +180,14 @@ export const PodsTable = ({ pods, extraColumns = [] }: PodsTablesProps) => {
     <div style={tableStyle}>
       <Table
         options={{ paging: true, search: false, emptyRowsWhenPaging: false }}
-        data={pods as Pod[]}
+        // It was observed that in some instances the pod drawer closes when new data (like CPU usage) is available and the table reloads.
+        // Mapping the metadata UID to the tables ID fixes this problem.
+        data={
+          (pods as Pod[]).map((pod: Pod) => ({
+            ...pod,
+            id: pod?.metadata?.uid,
+          })) as any as Pod[]
+        }
         columns={columns}
       />
     </div>

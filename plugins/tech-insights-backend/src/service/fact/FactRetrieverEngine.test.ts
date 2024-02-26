@@ -17,11 +17,11 @@
 import {
   FactRetriever,
   FactRetrieverRegistration,
+  FactRetrieverRegistry,
   FactSchemaDefinition,
   TechInsightFact,
   TechInsightsStore,
 } from '@backstage/plugin-tech-insights-node';
-import { FactRetrieverRegistry } from './FactRetrieverRegistry';
 import {
   DefaultFactRetrieverEngine,
   FactRetrieverEngine,
@@ -117,7 +117,7 @@ describe('FactRetrieverEngine', () => {
   }
 
   const databases = TestDatabases.create({
-    ids: ['POSTGRES_13', 'POSTGRES_9', 'SQLITE_3'],
+    ids: ['POSTGRES_16', 'POSTGRES_12', 'SQLITE_3'],
   });
 
   async function createEngine(

@@ -1,5 +1,193 @@
 # @backstage/create-app
 
+## 0.5.11
+
+### Patch Changes
+
+- c70c3dc: Bumped create-app version.
+- c420081: Add a seed file for `yarn.lock` in newly created apps. This file is downloaded directly from `https://github.com/backstage/backstage` at the time of creating a new project, ensuring that users always receive the latest version. The purpose of the seed file is to initialize the lock file with known good versions of individual dependencies that have had bad new releases published. The seed file will have no effect if the dependency is not present, it can not be used to install additional packages.
+- f71352c: Bumped TypeScript to version `5.3`.
+- 03e55b1: Updated the default app index template at `packages/app/public/index.html` to have a fallback value for the `app.title` config.
+- 6bb6f3e: Updated dependency `fs-extra` to `^11.2.0`.
+  Updated dependency `@types/fs-extra` to `^11.0.0`.
+- 6ba64c4: Updated dependency `commander` to `^12.0.0`.
+- aeec29c: Updated `packages/app` as well as the root `package.json` type resolutions to use React v18.
+
+  The `@testing-library/*` dependencies have also been updated to the ones compatible with React v18, and the test at `packages/app/src/App.test.tsx` had been updated to use more modern patterns that work better with these new versions.
+
+  For information on how to migrate existing apps to React v18, see the [migration guide](https://backstage.io/docs/tutorials/react18-migration)
+
+- Updated dependencies
+  - @backstage/cli-common@0.1.13
+
+## 0.5.11-next.3
+
+### Patch Changes
+
+- 03e55b1: Updated the default app index template at `packages/app/public/index.html` to have a fallback value for the `app.title` config.
+- Updated dependencies
+  - @backstage/cli-common@0.1.13
+
+## 0.5.11-next.2
+
+### Patch Changes
+
+- c420081: Add a seed file for `yarn.lock` in newly created apps. This file is downloaded directly from `https://github.com/backstage/backstage` at the time of creating a new project, ensuring that users always receive the latest version. The purpose of the seed file is to initialize the lock file with known good versions of individual dependencies that have had bad new releases published. The seed file will have no effect if the dependency is not present, it can not be used to install additional packages.
+- f71352c: Bumped TypeScript to version `5.3`.
+- Updated dependencies
+  - @backstage/cli-common@0.1.13
+
+## 0.5.11-next.1
+
+### Patch Changes
+
+- Bumped create-app version.
+- Updated dependencies
+  - @backstage/cli-common@0.1.13
+
+## 0.5.11-next.0
+
+### Patch Changes
+
+- aeec29c: Updated `packages/app` as well as the root `package.json` type resolutions to use React v18.
+
+  The `@testing-library/*` dependencies have also been updated to the ones compatible with React v18, and the test at `packages/app/src/App.test.tsx` had been updated to use more modern patterns that work better with these new versions.
+
+  For information on how to migrate existing apps to React v18, see the [migration guide](https://backstage.io/docs/tutorials/react18-migration)
+
+- Updated dependencies
+  - @backstage/cli-common@0.1.13
+
+## 0.5.9
+
+### Patch Changes
+
+- c9f71fb: Bumped create-app version.
+- ac277f3: Bumped create-app version.
+- 7acbb5a: Removed `mock-fs` dev dependency.
+- Updated dependencies
+  - @backstage/cli-common@0.1.13
+
+## 0.5.9-next.2
+
+### Patch Changes
+
+- Bumped create-app version.
+
+## 0.5.9-next.1
+
+### Patch Changes
+
+- 7acbb5a: Removed `mock-fs` dev dependency.
+- Updated dependencies
+  - @backstage/cli-common@0.1.13
+
+## 0.5.9-next.0
+
+### Patch Changes
+
+- Bumped create-app version.
+- Updated dependencies
+  - @backstage/cli-common@0.1.13
+
+## 0.5.8
+
+### Patch Changes
+
+- 8ece804: Bumped create-app version.
+- 0351e09: Bumped create-app version.
+- 3f1192f: Bumped create-app version.
+- a96c2d4: Include the `<EntityLinksCard />` for group entities by default
+- 375b6f7: CircelCI plugin moved permanently
+- Updated dependencies
+  - @backstage/cli-common@0.1.13
+
+## 0.5.8-next.4
+
+### Patch Changes
+
+- Bumped create-app version.
+- Updated dependencies
+  - @backstage/cli-common@0.1.13
+
+## 0.5.8-next.3
+
+### Patch Changes
+
+- a96c2d4: Include the `<EntityLinksCard />` for group entities by default
+- Updated dependencies
+  - @backstage/cli-common@0.1.13
+
+## 0.5.8-next.2
+
+### Patch Changes
+
+- 375b6f7d68: CircelCI plugin moved permanently
+- Updated dependencies
+  - @backstage/cli-common@0.1.13
+
+## 0.5.8-next.1
+
+### Patch Changes
+
+- Bumped create-app version.
+
+## 0.5.8-next.0
+
+### Patch Changes
+
+- Bumped create-app version.
+- Updated dependencies
+  - @backstage/cli-common@0.1.13
+
+## 0.5.7
+
+### Patch Changes
+
+- 770763487a: Cleaned up cases where deprecated code was being used but had a new location they should be imported from
+- 013611b42e: `knex` has been bumped to major version 3 and `better-sqlite3` to major version 9, which deprecate node 16 support.
+
+  You can do the same in your own Backstage repository to ensure that you get future node 18+ relevant updates, by having the following lines in your `packages/backend/package.json`:
+
+  ```
+  "dependencies": {
+    // ...
+    "knex": "^3.0.0"
+  },
+  "devDependencies": {
+    // ...
+    "better-sqlite3": "^9.0.0",
+  ```
+
+- f577e1176f: Bumped create-app version.
+- 6c2b872153: Add official support for React 18.
+- ae1602e54d: If create app installs dependencies, don't suggest to user that they also need to do it.
+- e6b7ab8d2b: Added missing node-gyp dependency to fix Docker image build
+- Updated dependencies
+  - @backstage/cli-common@0.1.13
+
+## 0.5.7-next.2
+
+### Patch Changes
+
+- [#20771](https://github.com/backstage/backstage/pull/20771) [`770763487a`](https://github.com/backstage/backstage/commit/770763487a5d14f33748643ceaa2f2981f1f918b) Thanks [@awanlin](https://github.com/awanlin)! - Cleaned up cases where deprecated code was being used but had a new location they should be imported from
+
+- [#20570](https://github.com/backstage/backstage/pull/20570) [`013611b42e`](https://github.com/backstage/backstage/commit/013611b42ed457fefa9bb85fddf416cf5e0c1f76) Thanks [@freben](https://github.com/freben)! - `knex` has been bumped to major version 3 and `better-sqlite3` to major version 9, which deprecate node 16 support.
+
+  You can do the same in your own Backstage repository to ensure that you get future node 18+ relevant updates, by having the following lines in your `packages/backend/package.json`:
+
+  ```
+  "dependencies": {
+    // ...
+    "knex": "^3.0.0"
+  },
+  "devDependencies": {
+    // ...
+    "better-sqlite3": "^9.0.0",
+  ```
+
+- [#20695](https://github.com/backstage/backstage/pull/20695) [`e6b7ab8d2b`](https://github.com/backstage/backstage/commit/e6b7ab8d2bc179d543648e143fa1f2eecb08809e) Thanks [@fjudith](https://github.com/fjudith)! - Added missing node-gyp dependency to fix Docker image build
+
 ## 0.5.7-next.1
 
 ### Patch Changes

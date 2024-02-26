@@ -1,5 +1,82 @@
 # @backstage/integration
 
+## 1.9.0
+
+### Minor Changes
+
+- e27b7f3: Fix rate limit detection by looking for HTTP status code 429 and updating the header `x-ratelimit-remaining` to look for in case of a 403 code is returned
+
+### Patch Changes
+
+- 6d898f7: All single-line secrets read from config will now have both leading and trailing whitespace trimmed. This is done to ensure that the secrets are always valid HTTP header values, since many fetch implementations will include the header value itself when an error is thrown due to invalid header values.
+- 1cae748: Updated dependency `git-url-parse` to `^14.0.0`.
+- 2d0e7cd: Validate if the `baseUrl` is a valid URL
+- Updated dependencies
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+
+## 1.9.0-next.1
+
+### Patch Changes
+
+- 6d898f7: All single-line secrets read from config will now have both leading and trailing whitespace trimmed. This is done to ensure that the secrets are always valid HTTP header values, since many fetch implementations will include the header value itself when an error is thrown due to invalid header values.
+- 1cae748: Updated dependency `git-url-parse` to `^14.0.0`.
+- Updated dependencies
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+
+## 1.9.0-next.0
+
+### Minor Changes
+
+- e27b7f3: Fix rate limit detection by looking for HTTP status code 429 and updating the header `x-ratelimit-remaining` to look for in case of a 403 code is returned
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/config@1.1.1
+  - @backstage/errors@1.2.3
+
+## 1.8.0
+
+### Minor Changes
+
+- 870db76: Implemented `readTree` for Gitea provider to support TechDocs functionality
+
+### Patch Changes
+
+- 99fb541: Updated dependency `@azure/identity` to `^4.0.0`.
+- Updated dependencies
+  - @backstage/config@1.1.1
+
+## 1.8.0-next.1
+
+### Patch Changes
+
+- 99fb54183b: Updated dependency `@azure/identity` to `^4.0.0`.
+- Updated dependencies
+  - @backstage/config@1.1.1
+
+## 1.8.0-next.0
+
+### Minor Changes
+
+- 870db76a45: Implemented `readTree` for Gitea provider to support TechDocs functionality
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/config@1.1.1
+
+## 1.7.2
+
+### Patch Changes
+
+- 243c655a68: JSDoc and Error message updates to handle `Azure Active Directory` re-brand to `Entra ID`
+- 4aa43f62aa: Updated dependency `cross-fetch` to `^4.0.0`.
+- Updated dependencies
+  - @backstage/config@1.1.1
+
 ## 1.7.2-next.0
 
 ### Patch Changes

@@ -1,7 +1,5 @@
 # search-backend-module-explore
 
-> DISCLAIMER: The new backend system is in alpha, and so are the search backend module support for the new backend system. We don't recommend you to migrate your backend installations to the new system yet. But if you want to experiment, you can find getting started guides below.
-
 This package exports a module that extends the search backend to also indexing the tools exposed by the [`explore` service](https://github.com/backstage/backstage/tree/master/plugins/explore-backend).
 
 ## Installation
@@ -10,7 +8,7 @@ Add the module package as a dependency:
 
 ```bash
 # From your Backstage root directory
-yarn add --cwd packages/backend @backstage/plugin-search-backend-module-explore
+yarn --cwd packages/backend add @backstage/plugin-search-backend-module-explore
 ```
 
 Add the collator to your backend instance, along with the search plugin itself:

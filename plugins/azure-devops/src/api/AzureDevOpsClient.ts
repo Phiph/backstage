@@ -27,31 +27,39 @@ import {
   RepoBuildOptions,
   Team,
 } from '@backstage/plugin-azure-devops-common';
-import { DiscoveryApi, IdentityApi } from '@backstage/core-plugin-api';
+import { DiscoveryApi, FetchApi } from '@backstage/core-plugin-api';
 import { ResponseError } from '@backstage/errors';
 import { AzureDevOpsApi } from './AzureDevOpsApi';
 
 /** @public */
 export class AzureDevOpsClient implements AzureDevOpsApi {
   private readonly discoveryApi: DiscoveryApi;
-  private readonly identityApi: IdentityApi;
+  private readonly fetchApi: FetchApi;
 
   public constructor(options: {
     discoveryApi: DiscoveryApi;
-    identityApi: IdentityApi;
+    fetchApi: FetchApi;
   }) {
     this.discoveryApi = options.discoveryApi;
-    this.identityApi = options.identityApi;
+    this.fetchApi = options.fetchApi;
   }
 
   public async getRepoBuilds(
     projectName: string,
     repoName: string,
+    host?: string,
+    org?: string,
     options?: RepoBuildOptions,
   ): Promise<{ items: RepoBuild[] }> {
     const queryString = new URLSearchParams();
     if (options?.top) {
       queryString.append('top', options.top.toString());
+    }
+    if (host) {
+      queryString.append('host', host);
+    }
+    if (org) {
+      queryString.append('org', org);
     }
     const urlSegment = `repo-builds/${encodeURIComponent(
       projectName,
@@ -64,10 +72,19 @@ export class AzureDevOpsClient implements AzureDevOpsApi {
   public async getGitTags(
     projectName: string,
     repoName: string,
+    host?: string,
+    org?: string,
   ): Promise<{ items: GitTag[] }> {
+    const queryString = new URLSearchParams();
+    if (host) {
+      queryString.append('host', host);
+    }
+    if (org) {
+      queryString.append('org', org);
+    }
     const urlSegment = `git-tags/${encodeURIComponent(
       projectName,
-    )}/${encodeURIComponent(repoName)}`;
+    )}/${encodeURIComponent(repoName)}?${queryString}`;
 
     const items = await this.get<GitTag[]>(urlSegment);
     return { items };
@@ -76,6 +93,8 @@ export class AzureDevOpsClient implements AzureDevOpsApi {
   public async getPullRequests(
     projectName: string,
     repoName: string,
+    host?: string,
+    org?: string,
     options?: PullRequestOptions,
   ): Promise<{ items: PullRequest[] }> {
     const queryString = new URLSearchParams();
@@ -84,6 +103,12 @@ export class AzureDevOpsClient implements AzureDevOpsApi {
     }
     if (options?.status) {
       queryString.append('status', options.status.toString());
+    }
+    if (host) {
+      queryString.append('host', host);
+    }
+    if (org) {
+      queryString.append('org', org);
     }
     const urlSegment = `pull-requests/${encodeURIComponent(
       projectName,
@@ -113,11 +138,19 @@ export class AzureDevOpsClient implements AzureDevOpsApi {
     projectName: string,
     repoName?: string,
     definitionName?: string,
+    host?: string,
+    org?: string,
     options?: BuildRunOptions,
   ): Promise<{ items: BuildRun[] }> {
     const queryString = new URLSearchParams();
     if (repoName) {
       queryString.append('repoName', repoName);
+    }
+    if (host) {
+      queryString.append('host', host);
+    }
+    if (org) {
+      queryString.append('org', org);
     }
     if (definitionName) {
       const definitionNames = definitionName.split(',');
@@ -149,10 +182,20 @@ export class AzureDevOpsClient implements AzureDevOpsApi {
   }
 
   public async getReadme(opts: ReadmeConfig): Promise<Readme> {
+    const queryString = new URLSearchParams();
+    if (opts.host) {
+      queryString.append('host', opts.host);
+    }
+    if (opts.org) {
+      queryString.append('org', opts.org);
+    }
+    if (opts.path) {
+      queryString.append('path', opts.path);
+    }
     return await this.get(
       `readme/${encodeURIComponent(opts.project)}/${encodeURIComponent(
         opts.repo,
-      )}`,
+      )}?${queryString}`,
     );
   }
 
@@ -160,10 +203,7 @@ export class AzureDevOpsClient implements AzureDevOpsApi {
     const baseUrl = `${await this.discoveryApi.getBaseUrl('azure-devops')}/`;
     const url = new URL(path, baseUrl);
 
-    const { token: idToken } = await this.identityApi.getCredentials();
-    const response = await fetch(url.toString(), {
-      headers: idToken ? { Authorization: `Bearer ${idToken}` } : {},
-    });
+    const response = await this.fetchApi.fetch(url.toString());
 
     if (!response.ok) {
       throw await ResponseError.fromResponse(response);

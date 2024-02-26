@@ -77,7 +77,7 @@ import {
 import {
   EntityCircleCIContent,
   isCircleCIAvailable,
-} from '@backstage/plugin-circleci';
+} from '@circleci/backstage-plugin';
 import {
   EntityCloudbuildContent,
   isCloudbuildAvailable,
@@ -185,6 +185,7 @@ import {
   isLinguistAvailable,
   EntityLinguistCard,
 } from '@backstage/plugin-linguist';
+import { EntityTeamPullRequestsContent } from '@backstage/plugin-github-pull-requests-board';
 
 const customEntityFilterKind = ['Component', 'API', 'System'];
 
@@ -798,13 +799,19 @@ const groupPage = (
             entityFilterKind={customEntityFilterKind}
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} md={6}>
           <EntityMembersListCard />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <EntityLinksCard />
         </Grid>
         <Grid item xs={12}>
           <EntityLikeDislikeRatingsCard />
         </Grid>
       </Grid>
+    </EntityLayout.Route>
+    <EntityLayout.Route path="/pull-requests" title="Pull Requests">
+      <EntityTeamPullRequestsContent />
     </EntityLayout.Route>
   </EntityLayoutWrapper>
 );
